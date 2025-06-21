@@ -108,6 +108,9 @@ const FormRenderer = ({ form, metadataFields, onSubmit, isPreview = false }) => 
               </label>
             </div>
           );
+
+        case 'user':
+          return <input {...commonProps} type="text" />;
         
         case 'date':
           return <input {...commonProps} type="date" />;

@@ -898,6 +898,12 @@ body {
   gap: 16px;
 }
 
+.workflow-forms {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .workflow-step {
   display: flex;
   align-items: flex-start;
