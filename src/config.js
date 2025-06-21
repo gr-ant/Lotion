@@ -104,7 +104,7 @@ export const config = {
       ],
       workflow: {
         forms: [
-          { formId: 'form1', order: 1 }
+          { formId: 'form1', order: 1, users: [] }
         ],
         steps: [
           {
@@ -243,7 +243,7 @@ export const config = {
       ],
       workflow: {
         forms: [
-          { formId: 'form1', order: 1 }
+          { formId: 'form1', order: 1, users: [] }
         ],
         steps: [
           {
@@ -391,7 +391,7 @@ export const config = {
       ],
       workflow: {
         forms: [
-          { formId: 'form1', order: 1 }
+          { formId: 'form1', order: 1, users: [] }
         ],
         steps: [
           {

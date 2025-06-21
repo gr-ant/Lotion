@@ -10,3 +10,7 @@ Currently, two official plugins are available:
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+## Workflow
+
+Workflows define the order in which forms appear for specific users. To build a workflow, place the forms you need into a list and assign each item to an individual user or group. The editor for workflows behaves much like the metadata field creator, letting you reorder forms and manage assignments through a similar interface.
