@@ -832,6 +832,7 @@ body {
 }
 
 /* Modal styles */
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -842,7 +843,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2000;
+  z-index: 5000; /* ensure the modal appears above all page content */
 }
 
 .modal {
@@ -853,6 +854,7 @@ body {
   width: 90%;
   max-height: 90vh;
   overflow-y: auto;
+  z-index: 5001; /* slightly higher than overlay for stacking */
 }
 
 .modal-header {
