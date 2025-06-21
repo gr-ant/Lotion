@@ -285,7 +285,7 @@ function FormBuilderPage() {
         </div>
 
         {showPreview && form.layout.length > 0 && (
-          <Modal title="Form Preview" onClose={() => setShowPreview(false)}>
+          <Modal title={form.name} onClose={() => setShowPreview(false)}>
             <FormRenderer form={form} metadataFields={metadataFields} isPreview={true} />
           </Modal>
         )}
