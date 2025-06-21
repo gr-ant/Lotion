@@ -853,7 +853,9 @@ body {
   max-width: 800px;
   width: 90%;
   max-height: 90vh;
-  overflow-y: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   z-index: 5001; /* slightly higher than overlay for stacking */
 }
 
@@ -876,6 +878,8 @@ body {
   padding: 24px;
   display: flex;
   justify-content: center;
+  flex: 1 1 auto;
+  overflow-y: auto;
 }
 
 .close-button {
