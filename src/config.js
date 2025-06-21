@@ -434,6 +434,29 @@ export const config = {
       },
     }
   ],
+  workflows: [
+    {
+      id: 'workflow_process1',
+      processId: 'process1',
+      forms: [
+        { formId: 'form1', order: 1 }
+      ]
+    },
+    {
+      id: 'workflow_process2',
+      processId: 'process2',
+      forms: [
+        { formId: 'form1', order: 1 }
+      ]
+    },
+    {
+      id: 'workflow_process3',
+      processId: 'process3',
+      forms: [
+        { formId: 'form1', order: 1 }
+      ]
+    }
+  ],
   app: {
     name: 'Lotion',
     version: '1.0.0',
@@ -482,4 +505,12 @@ export const getSubmenuByPath = (path) => {
     }
   }
   return null;
-}; 
+};
+
+export const getWorkflowByProcessId = (processId) => {
+  return config.workflows.find(wf => wf.processId === processId);
+};
+
+export const getWorkflowById = (id) => {
+  return config.workflows.find(wf => wf.id === id);
+};
