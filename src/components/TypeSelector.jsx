@@ -24,7 +24,7 @@ function TypeSelector({ onSelect, onClose, targetRef }) {
 
   if (!position) return null;
 
-  const fieldTypes = ['text', 'number', 'email', 'date', 'select', 'textarea', 'boolean'];
+  const fieldTypes = ['text', 'number', 'email', 'date', 'select', 'textarea', 'boolean', 'user'];
 
   return ReactDOM.createPortal(
     <div className="type-selector-menu" style={{ top: position.top, left: position.left }} ref={selectorRef}>

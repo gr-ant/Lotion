@@ -79,6 +79,14 @@ export const config = {
             { value: 'sales', label: 'Sales' },
             { value: 'support', label: 'Support' }
           ]
+        },
+        {
+          id: 'field5',
+          name: 'Assigned User',
+          type: 'user',
+          required: false,
+          description: 'User responsible for this step',
+          placeholder: 'Select user'
         }
       ],
       forms: [
@@ -95,6 +103,9 @@ export const config = {
         }
       ],
       workflow: {
+        forms: [
+          { formId: 'form1', order: 1 }
+        ],
         steps: [
           {
             id: 'step1',
@@ -102,7 +113,8 @@ export const config = {
             description: 'Collect required information from user',
             order: 1,
             type: 'form',
-            required: true
+            required: true,
+            user: null
           },
           {
             id: 'step2',
@@ -110,7 +122,8 @@ export const config = {
             description: 'Validate collected data',
             order: 2,
             type: 'validation',
-            required: true
+            required: true,
+            user: null
           },
           {
             id: 'step3',
@@ -118,7 +131,8 @@ export const config = {
             description: 'Process the validated data',
             order: 3,
             type: 'processing',
-            required: true
+            required: true,
+            user: null
           },
           {
             id: 'step4',
@@ -126,7 +140,8 @@ export const config = {
             description: 'Complete the process',
             order: 4,
             type: 'completion',
-            required: true
+            required: true,
+            user: null
           }
         ]
       },
@@ -204,6 +219,13 @@ export const config = {
             min: 1,
             max: 1000
           }
+        },
+        {
+          id: 'field5',
+          type: 'user',
+          name: 'Assigned User',
+          required: false,
+          placeholder: 'Select user'
         }
       ],
       forms: [
@@ -220,6 +242,9 @@ export const config = {
         }
       ],
       workflow: {
+        forms: [
+          { formId: 'form1', order: 1 }
+        ],
         steps: [
           {
             id: 'step1',
@@ -227,7 +252,8 @@ export const config = {
             description: 'Receive and validate order information',
             order: 1,
             type: 'receipt',
-            required: true
+            required: true,
+            user: null
           },
           {
             id: 'step2',
@@ -235,7 +261,8 @@ export const config = {
             description: 'Check product availability',
             order: 2,
             type: 'inventory',
-            required: true
+            required: true,
+            user: null
           },
           {
             id: 'step3',
@@ -243,7 +270,8 @@ export const config = {
             description: 'Process payment and confirm transaction',
             order: 3,
             type: 'payment',
-            required: true
+            required: true,
+            user: null
           },
           {
             id: 'step4',
@@ -251,7 +279,8 @@ export const config = {
             description: 'Prepare and ship order',
             order: 4,
             type: 'fulfillment',
-            required: true
+            required: true,
+            user: null
           }
         ]
       },
@@ -337,6 +366,13 @@ export const config = {
           validation: {
             maxLength: 500
           }
+        },
+        {
+          id: 'field6',
+          type: 'user',
+          name: 'Assigned User',
+          required: false,
+          placeholder: 'Select user'
         }
       ],
       forms: [
@@ -354,6 +390,9 @@ export const config = {
         }
       ],
       workflow: {
+        forms: [
+          { formId: 'form1', order: 1 }
+        ],
         steps: [
           {
             id: 'step1',
@@ -361,7 +400,8 @@ export const config = {
             description: 'Submit invoice for review',
             order: 1,
             type: 'submission',
-            required: true
+            required: true,
+            user: null
           },
           {
             id: 'step2',
@@ -369,7 +409,8 @@ export const config = {
             description: 'Review invoice details and documentation',
             order: 2,
             type: 'review',
-            required: true
+            required: true,
+            user: null
           },
           {
             id: 'step3',
@@ -377,7 +418,8 @@ export const config = {
             description: 'Manager approval for invoice payment',
             order: 3,
             type: 'approval',
-            required: true
+            required: true,
+            user: null
           },
           {
             id: 'step4',
@@ -385,7 +427,8 @@ export const config = {
             description: 'Process approved invoice payment',
             order: 4,
             type: 'payment',
-            required: true
+            required: true,
+            user: null
           }
         ]
       },
