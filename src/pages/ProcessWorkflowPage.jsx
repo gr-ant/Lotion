@@ -1,11 +1,45 @@
-import { Plus, FileText, Settings } from 'lucide-react';
-import { getProcessById } from '../config.js';
-import { useMemo } from 'react';
+import { Plus, FileText, Settings, ArrowUp, ArrowDown, Trash2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { getProcessById, getWorkflowByProcessId } from '../config.js';
 import WorkflowModel from '../models/WorkflowModel.js';
 
 function ProcessWorkflowPage({ processId }) {
   const process = getProcessById(processId);
-  const workflow = useMemo(() => new WorkflowModel(process?.workflow), [process]);
+  const workflowConfig = getWorkflowByProcessId(processId);
+
+  const [forms, setForms] = useState(() => {
+    const saved = localStorage.getItem(`workflowForms_${processId}`);
+    if (saved) return JSON.parse(saved);
+    return workflowConfig?.forms || [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem(`workflowForms_${processId}`, JSON.stringify(forms));
+  }, [forms, processId]);
+
+  const moveForm = (index, dir) => {
+    const newIndex = index + dir;
+    if (newIndex < 0 || newIndex >= forms.length) return;
+    const updated = [...forms];
+    const [item] = updated.splice(index, 1);
+    updated.splice(newIndex, 0, item);
+    setForms(updated.map((f, idx) => ({ ...f, order: idx + 1 })));
+  };
+
+  const removeForm = (formId) => {
+    const updated = forms.filter(f => f.formId !== formId);
+    setForms(updated.map((f, idx) => ({ ...f, order: idx + 1 })));
+  };
+
+  const addForm = (formId) => {
+    if (!formId) return;
+    const updated = [...forms, { formId, order: forms.length + 1 }];
+    setForms(updated);
+  };
+
+  const availableForms = process?.forms.filter(f => !forms.some(wf => wf.formId === f.id)) || [];
+
+  const workflow = new WorkflowModel({ forms });
 
   if (!process) {
     return <div className="page-content">Process not found</div>;
@@ -35,7 +69,7 @@ function ProcessWorkflowPage({ processId }) {
         <div className="content-card">
           <h3>Forms Order</h3>
           <div className="workflow-forms">
-            {workflow.getOrderedForms().map(({ formId, order }) => {
+            {workflow.getOrderedForms().map(({ formId, order }, index) => {
               const form = process.forms.find(f => f.id === formId);
               return (
                 <div key={formId} className="workflow-step">
@@ -43,9 +77,39 @@ function ProcessWorkflowPage({ processId }) {
                   <div className="step-content">
                     <h4>{form?.name || formId}</h4>
                   </div>
+                  <div className="step-actions">
+                    <button
+                      className="action-button"
+                      disabled={index === 0}
+                      onClick={() => moveForm(index, -1)}
+                    >
+                      <ArrowUp size={14} />
+                    </button>
+                    <button
+                      className="action-button"
+                      disabled={index === forms.length - 1}
+                      onClick={() => moveForm(index, 1)}
+                    >
+                      <ArrowDown size={14} />
+                    </button>
+                    <button
+                      className="action-button delete"
+                      onClick={() => removeForm(formId)}
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
                 </div>
               );
             })}
+            <div className="workflow-step skeleton-row">
+              <select onChange={(e) => { addForm(e.target.value); e.target.value=''; }}>
+                <option value="">Add form...</option>
+                {availableForms.map((f) => (
+                  <option key={f.id} value={f.id}>{f.name}</option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
         <div className="content-card">

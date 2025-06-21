@@ -914,6 +914,12 @@ body {
   border-radius: 6px;
 }
 
+.step-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+}
+
 .step-number {
   display: flex;
   align-items: center;
