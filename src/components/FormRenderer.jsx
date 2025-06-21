@@ -141,13 +141,6 @@ const FormRenderer = ({ form, metadataFields, onSubmit, isPreview = false }) => 
   return (
     <div className="form-renderer">
       <form onSubmit={handleSubmit} className="rendered-form">
-        <div className="form-header">
-          <h2 className="form-title">{form.name}</h2>
-          {form.description && (
-            <p className="form-description">{form.description}</p>
-          )}
-        </div>
-        
         <div className="form-fields">
           {form.layout.map((item, index) => renderField(item))}
         </div>
