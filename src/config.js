@@ -455,6 +455,14 @@ export const config = {
   }
 };
 
+export const users = [
+  { id: 'user1', name: 'Alice Johnson' },
+  { id: 'user2', name: 'Bob Smith' },
+  { id: 'user3', name: 'Charlie Lee' }
+];
+
+export const getUserById = (id) => users.find(u => u.id === id);
+
 // Helper functions to work with config
 export const getProcessById = (id) => {
   return config.processes.find(process => process.id === id);

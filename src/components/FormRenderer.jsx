@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './FormRenderer.css';
+import { users } from '../config.js';
 
 const FormRenderer = ({ form, metadataFields, onSubmit, isPreview = false }) => {
   const [formData, setFormData] = useState({});
@@ -29,7 +30,12 @@ const FormRenderer = ({ form, metadataFields, onSubmit, isPreview = false }) => 
       const field = getFieldById(item.metadataFieldId);
       if (field && field.required) {
         const value = formData[field.id];
-        if (!value || (typeof value === 'string' && value.trim() === '')) {
+        if (
+          value === undefined ||
+          value === null ||
+          (typeof value === 'string' && value.trim() === '') ||
+          (Array.isArray(value) && value.length === 0)
+        ) {
           newErrors[field.id] = `${field.name} is required`;
         }
       }
@@ -56,7 +62,8 @@ const FormRenderer = ({ form, metadataFields, onSubmit, isPreview = false }) => 
     const field = getFieldById(item.metadataFieldId);
     if (!field) return null;
 
-    const value = formData[field.id] || '';
+    const defaultValue = field.type === 'users' ? [] : '';
+    const value = formData[field.id] !== undefined ? formData[field.id] : defaultValue;
     const error = errors[field.id];
     const isRequired = field.required;
 
@@ -110,7 +117,38 @@ const FormRenderer = ({ form, metadataFields, onSubmit, isPreview = false }) => 
           );
 
         case 'user':
-          return <input {...commonProps} type="text" />;
+          return (
+            <select {...commonProps} className={`form-select ${error ? 'error' : ''}`}> 
+              <option value="">Select a user</option>
+              {users.map((u) => (
+                <option key={u.id} value={u.id}>
+                  {u.name}
+                </option>
+              ))}
+            </select>
+          );
+
+        case 'users':
+          return (
+            <select
+              {...commonProps}
+              multiple
+              value={value}
+              onChange={(e) =>
+                handleInputChange(
+                  field.id,
+                  Array.from(e.target.selectedOptions).map((o) => o.value)
+                )
+              }
+              className={`form-select ${error ? 'error' : ''}`}
+            >
+              {users.map((u) => (
+                <option key={u.id} value={u.id}>
+                  {u.name}
+                </option>
+              ))}
+            </select>
+          );
         
         case 'date':
           return <input {...commonProps} type="date" />;
