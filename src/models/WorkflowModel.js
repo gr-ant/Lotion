@@ -1,11 +1,11 @@
 class WorkflowModel {
   constructor({ forms = [], steps = [] } = {}) {
-    this.forms = [...forms];
+    this.forms = forms.map(f => ({ users: [], ...f }));
     this.steps = [...steps];
   }
 
-  addForm(formId, order = this.forms.length + 1) {
-    this.forms.push({ formId, order });
+  addForm(formId, users = [], order = this.forms.length + 1) {
+    this.forms.push({ formId, users, order });
     this._sortForms();
   }
 
@@ -20,6 +20,13 @@ class WorkflowModel {
     const [form] = this.forms.splice(index, 1);
     this.forms.splice(newIndex, 0, form);
     this._sortForms();
+  }
+
+  updateUsers(formId, users) {
+    const form = this.forms.find(f => f.formId === formId);
+    if (form) {
+      form.users = users;
+    }
   }
 
   getOrderedForms() {
