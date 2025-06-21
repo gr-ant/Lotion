@@ -870,6 +870,10 @@ body {
   margin: 0;
 }
 
+.modal-content {
+  padding: 24px;
+}
+
 .close-button {
   background: none;
   border: none;
