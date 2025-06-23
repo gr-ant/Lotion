@@ -31,7 +31,8 @@ function ProcessRulesPage({ processId }) {
       name: newRuleName.trim(),
       leftFieldId: firstField,
       operator: '=',
-      rightFieldId: firstField
+      rightFieldId: firstField,
+      rightValue: ''
     });
     setNewRuleName('');
     setAddingRule(false);
@@ -139,19 +140,43 @@ function ProcessRulesPage({ processId }) {
                 </div>
                 <div className="prop-cell">
                   {editingField === rule.id && editingProp === 'rightFieldId' ? (
-                    <select
-                      className="seamless-input"
-                      value={rule.rightFieldId}
-                      onChange={e => updateRule(rule.id, 'rightFieldId', e.target.value)}
-                      onBlur={stopEditing}
-                      autoFocus
-                    >
-                      {metadataFields.map(f => (
-                        <option key={f.id} value={f.id}>{f.name}</option>
-                      ))}
-                    </select>
+                    <div style={{ display: 'flex', width: '100%', gap: '8px' }}>
+                      <select
+                        className="seamless-input"
+                        value={rule.rightFieldId || '__custom__'}
+                        onChange={e => {
+                          const val = e.target.value;
+                          if (val === '__custom__') {
+                            updateRule(rule.id, 'rightFieldId', '');
+                          } else {
+                            updateRule(rule.id, 'rightFieldId', val);
+                            updateRule(rule.id, 'rightValue', '');
+                            stopEditing();
+                          }
+                        }}
+                      >
+                        {metadataFields.map(f => (
+                          <option key={f.id} value={f.id}>{f.name}</option>
+                        ))}
+                        <option value="__custom__">Custom value...</option>
+                      </select>
+                      {!rule.rightFieldId && (
+                        <input
+                          type="text"
+                          className="seamless-input"
+                          value={rule.rightValue || ''}
+                          onChange={e => updateRule(rule.id, 'rightValue', e.target.value)}
+                          onBlur={stopEditing}
+                          autoFocus
+                          placeholder="Enter value"
+                          style={{ flex: 1 }}
+                        />
+                      )}
+                    </div>
                   ) : (
-                    <span className="editable-prop" onClick={() => startEditing(rule.id,'rightFieldId')}>{getFieldName(rule.rightFieldId)}</span>
+                    <span className="editable-prop" onClick={() => startEditing(rule.id,'rightFieldId')}>
+                      {rule.rightFieldId ? getFieldName(rule.rightFieldId) : (rule.rightValue || <span className="placeholder-text">Click to add...</span>)}
+                    </span>
                   )}
                 </div>
                 <div className="prop-cell prop-actions">
