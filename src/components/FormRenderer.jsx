@@ -107,7 +107,7 @@ const FormRenderer = ({ form, metadataFields, onSubmit, isPreview = false }) => 
           // If meta.datasetId is set, use dataset items as options
           let options = meta.options || [];
           if (meta.datasetId) {
-            const dataset = notionService.getDatasetById(meta.datasetId);
+            const dataset = datasets.find(ds => ds.id === meta.datasetId);
             if (dataset && dataset.items) {
               options = dataset.items.map(item => ({ value: item.value, label: item.label }));
             }

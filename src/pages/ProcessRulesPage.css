@@ -87,5 +87,5 @@
 
 .fx-switch input:checked + .fx-slider:before {
   transform: translateX(12px);
-  content: 'X';
+  content: 'V';
 }

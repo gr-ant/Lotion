@@ -111,7 +111,6 @@ function ProcessMetadataPage({ processId }) {
             <div className="metadata-grid-header">
               <div className="header-name">Field Name</div>
               <div className="header-type">Type</div>
-              <div>Dataset</div>
               <div className="header-required">Required</div>
               <div className="header-placeholder">Placeholder</div>
               <div className="header-actions">Actions</div> {/* Added "Actions" header text */}
@@ -163,83 +162,76 @@ function ProcessMetadataPage({ processId }) {
                   )}
                 </div>
 
-                <div className="prop-cell prop-type" ref={el => (typeSelectorRefs.current[field.id] = el)}>
+                <div className="prop-cell prop-type" ref={el => (typeSelectorRefs.current[field.id] = el)} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <span className="editable-prop type-tag" onClick={() => startEditing(field.id, 'type')}>{field.type}</span>
-                </div>
-
-                {/* For select/dropdown fields, allow picking a dataset as options source */}
-                {(field.type === 'select' || field.type === 'dropdown') && (
-                  <div className="prop-cell prop-dataset" style={{ position: 'relative' }}>
-                    <div
-                      className="notion-dropdown-trigger"
-                      style={{
-                        border: '1px solid #e3e2e0',
-                        borderRadius: 4,
-                        padding: '4px 8px',
-                        minWidth: 120,
-                        background: '#fff',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        color: field.datasetId ? '#37352f' : '#9b9a97',
-                        fontSize: 14
-                      }}
-                      onClick={() => setActiveDatasetDropdown(field.id)}
-                      tabIndex={0}
-                    >
-                      <span>
-                        {field.datasetId
-                          ? datasets.find(ds => ds.id === field.datasetId)?.name || 'Unknown dataset'
-                          : 'No dataset'}
-                      </span>
-                    </div>
-                    {activeDatasetDropdown === field.id && (
+                  {/* Show dataset/options dropdown inline if type is select or dropdown */}
+                  {(field.type === 'select' || field.type === 'dropdown') && (
+                    <div style={{ position: 'relative' }}>
                       <div
-                        className="notion-dropdown-menu"
+                        className="notion-dropdown-trigger"
                         style={{
-                          position: 'absolute',
-                          top: '110%',
-                          left: 0,
-                          zIndex: 20,
-                          background: '#fff',
                           border: '1px solid #e3e2e0',
                           borderRadius: 4,
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
-                          minWidth: 180,
-                          padding: '4px 0'
+                          padding: '4px 8px',
+                          minWidth: 120,
+                          background: '#fff',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          color: field.datasetId ? '#37352f' : '#9b9a97',
+                          fontSize: 14
                         }}
-                        onBlur={() => setActiveDatasetDropdown(null)}
-                        tabIndex={-1}
+                        onClick={() => setActiveDatasetDropdown(field.id)}
+                        tabIndex={0}
                       >
-                        {datasets.map(ds => (
-                          <div
-                            key={ds.id}
-                            className="notion-dropdown-option"
-                            style={{
-                              padding: '8px 16px',
-                              cursor: 'pointer',
-                              color: field.datasetId === ds.id ? '#37352f' : '#37352f99',
-                              background: field.datasetId === ds.id ? '#f7f6f3' : 'transparent'
-                            }}
-                            onMouseDown={() => {
-                              updateFieldProperty(field.id, 'datasetId', ds.id);
-                              setActiveDatasetDropdown(null);
-                            }}
-                          >
-                            {ds.name}
-                          </div>
-                        ))}
+                        <span>
+                          {field.datasetId
+                            ? datasets.find(ds => ds.id === field.datasetId)?.name || 'Unknown dataset'
+                            : 'No dataset'}
+                        </span>
                       </div>
-                    )}
-                  </div>
-                )}
-
-                {(field.type !== 'select' && field.type !== 'dropdown') && (
-                  <div className="prop-cell prop-dataset">
-                    <span className="editable-prop placeholder-text">N/A</span>
-                  </div>
-                )}
+                      {activeDatasetDropdown === field.id && (
+                        <div
+                          className="notion-dropdown-menu"
+                          style={{
+                            position: 'absolute',
+                            top: '110%',
+                            left: 0,
+                            zIndex: 20,
+                            background: '#fff',
+                            border: '1px solid #e3e2e0',
+                            borderRadius: 4,
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
+                            minWidth: 180,
+                            padding: '4px 0'
+                          }}
+                          onBlur={() => setActiveDatasetDropdown(null)}
+                          tabIndex={-1}
+                        >
+                          {datasets.map(ds => (
+                            <div
+                              key={ds.id}
+                              className="notion-dropdown-option"
+                              style={{
+                                padding: '8px 16px',
+                                cursor: 'pointer',
+                                color: field.datasetId === ds.id ? '#37352f' : '#37352f99',
+                                background: field.datasetId === ds.id ? '#f7f6f3' : 'transparent'
+                              }}
+                              onMouseDown={() => {
+                                updateFieldProperty(field.id, 'datasetId', ds.id);
+                                setActiveDatasetDropdown(null);
+                              }}
+                            >
+                              {ds.name}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
 
                 <div className="prop-cell prop-required" ref={el => (requiredSelectorRefs.current[field.id] = el)}>
                   <span
@@ -353,9 +345,6 @@ function ProcessMetadataPage({ processId }) {
             </div>
             <div className="prop-cell prop-required">
               <span className="editable-prop required-tag no">No</span>
-            </div>
-            <div className="prop-cell prop-desc">
-              <span className="editable-prop placeholder-text">Click to add...</span>
             </div>
             <div className="prop-cell prop-placeholder">
               <span className="editable-prop placeholder-text">Click to add...</span>
