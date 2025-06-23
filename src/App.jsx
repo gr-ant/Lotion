@@ -1,9 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { config } from './config.js';
 import Sidebar from './components/Sidebar.jsx';
-import ProcessMetadataPage from './pages/ProcessMetadataPage.jsx';
-import ProcessWorkflowPage from './pages/ProcessWorkflowPage.jsx';
-import ProcessFormsListPage from './pages/ProcessFormsListPage.jsx';
+import HomePage from './pages/HomePage.jsx';
 import ProcessDynamicPage from './pages/ProcessDynamicPage.jsx';
 import FormBuilderPage from './pages/FormBuilderPage.jsx';
 import UserGroupsPage from './pages/UserGroupsPage2.jsx';
@@ -18,11 +15,12 @@ function App() {
         <Sidebar />
         <main className="main-content">
           <Routes>
+            <Route path="/" element={<HomePage />} />
             <Route path="/processes/:processId/:submenu" element={<ProcessDynamicPage />} />
             <Route path="/processes/:processId/forms/:formId" element={<FormBuilderPage />} />
             <Route path="/user-groups" element={<UserGroupsPage />} />
             <Route path="/users" element={<UsersPage />} />
-            <Route path="*" element={<ProcessMetadataPage processId="process1" />} />
+            <Route path="*" element={<HomePage />} />
           </Routes>
         </main>
       </div>
