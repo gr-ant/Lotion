@@ -31,7 +31,8 @@ function ProcessRulesPage({ processId }) {
       name: newRuleName.trim(),
       leftFieldId: firstField,
       operator: '=',
-      rightFieldId: firstField
+      rightFieldId: firstField,
+      rightValue: ''
     });
     setNewRuleName('');
     setAddingRule(false);
@@ -139,19 +140,37 @@ function ProcessRulesPage({ processId }) {
                 </div>
                 <div className="prop-cell">
                   {editingField === rule.id && editingProp === 'rightFieldId' ? (
-                    <select
-                      className="seamless-input"
-                      value={rule.rightFieldId}
-                      onChange={e => updateRule(rule.id, 'rightFieldId', e.target.value)}
-                      onBlur={stopEditing}
-                      autoFocus
-                    >
-                      {metadataFields.map(f => (
-                        <option key={f.id} value={f.id}>{f.name}</option>
-                      ))}
-                    </select>
+                    <>
+                      <input
+                        type="text"
+                        className="seamless-input"
+                        list={`fieldb-options-${rule.id}`}
+                        value={rule.rightFieldId ? getFieldName(rule.rightFieldId) : (rule.rightValue || '')}
+                        onChange={e => {
+                          const text = e.target.value;
+                          const field = metadataFields.find(f => f.name === text);
+                          if (field) {
+                            updateRule(rule.id, 'rightFieldId', field.id);
+                            updateRule(rule.id, 'rightValue', '');
+                          } else {
+                            updateRule(rule.id, 'rightFieldId', '');
+                            updateRule(rule.id, 'rightValue', text);
+                          }
+                        }}
+                        onBlur={stopEditing}
+                        autoFocus
+                        placeholder="Select field or type value"
+                      />
+                      <datalist id={`fieldb-options-${rule.id}`}>
+                        {metadataFields.map(f => (
+                          <option key={f.id} value={f.name} />
+                        ))}
+                      </datalist>
+                    </>
                   ) : (
-                    <span className="editable-prop" onClick={() => startEditing(rule.id,'rightFieldId')}>{getFieldName(rule.rightFieldId)}</span>
+                    <span className="editable-prop" onClick={() => startEditing(rule.id,'rightFieldId')}>
+                      {rule.rightFieldId ? getFieldName(rule.rightFieldId) : (rule.rightValue || <span className="placeholder-text">Click to add...</span>)}
+                    </span>
                   )}
                 </div>
                 <div className="prop-cell prop-actions">
