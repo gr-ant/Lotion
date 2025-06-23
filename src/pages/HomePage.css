@@ -1,0 +1,47 @@
+.process-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.process-card {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  background-color: #ffffff;
+  border: 1px solid #e3e2e0;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #37352f;
+  transition: all 0.2s;
+}
+
+.process-card:hover {
+  border-color: #d3d2d0;
+  background-color: #f7f6f3;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.process-card h4 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.process-card p {
+  font-size: 13px;
+  color: #787774;
+  margin: 0;
+}
+
+.empty-processes-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px;
+  border: 2px dashed #e3e2e0;
+  border-radius: 6px;
+  color: #787774;
+  font-size: 14px;
+}

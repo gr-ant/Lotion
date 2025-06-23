@@ -51,6 +51,16 @@ function Sidebar() {
 
       <div className="sidebar-content">
         <div className="nav-section">
+          <nav className="nav-menu">
+            <Link
+              to="/"
+              className={`nav-item${location.pathname === '/' ? ' active' : ''}`}
+            >
+              <span>Home</span>
+            </Link>
+          </nav>
+        </div>
+        <div className="nav-section">
           <div className="nav-header">
             <span>User Management</span>
           </div>
