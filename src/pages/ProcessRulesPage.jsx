@@ -31,7 +31,9 @@ function ProcessRulesPage({ processId }) {
       name: newRuleName.trim(),
       leftFieldId: firstField,
       operator: '=',
-      rightFieldId: firstField
+      rightFieldId: firstField,
+      rightValue: '',
+      rightMode: 'field'
     });
     setNewRuleName('');
     setAddingRule(false);
@@ -87,7 +89,7 @@ function ProcessRulesPage({ processId }) {
           ) : (
             rules.map(rule => (
               <div key={rule.id} className="metadata-field-row">
-                <div className="prop-cell prop-name">
+                <div className="prop-cell prop-name" style={{ gap: '8px', alignItems: 'center' }}>
                   {editingField === rule.id && editingProp === 'name' ? (
                     <input
                       type="text"
@@ -101,6 +103,14 @@ function ProcessRulesPage({ processId }) {
                   ) : (
                     <span className="editable-prop" onClick={() => startEditing(rule.id,'name')}>{rule.name}</span>
                   )}
+                  <label className="fx-switch">
+                    <input
+                      type="checkbox"
+                      checked={rule.rightMode === 'value'}
+                      onChange={e => updateRule(rule.id, 'rightMode', e.target.checked ? 'value' : 'field')}
+                    />
+                    <span className="fx-slider" />
+                  </label>
                 </div>
                 <div className="prop-cell">
                   {editingField === rule.id && editingProp === 'leftFieldId' ? (
@@ -139,19 +149,35 @@ function ProcessRulesPage({ processId }) {
                 </div>
                 <div className="prop-cell">
                   {editingField === rule.id && editingProp === 'rightFieldId' ? (
-                    <select
-                      className="seamless-input"
-                      value={rule.rightFieldId}
-                      onChange={e => updateRule(rule.id, 'rightFieldId', e.target.value)}
-                      onBlur={stopEditing}
-                      autoFocus
-                    >
-                      {metadataFields.map(f => (
-                        <option key={f.id} value={f.id}>{f.name}</option>
-                      ))}
-                    </select>
+                    rule.rightMode === 'field' ? (
+                      <select
+                        className="seamless-input"
+                        value={rule.rightFieldId}
+                        onChange={e => updateRule(rule.id, 'rightFieldId', e.target.value)}
+                        onBlur={stopEditing}
+                        autoFocus
+                      >
+                        {metadataFields.map(f => (
+                          <option key={f.id} value={f.id}>{f.name}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        type="text"
+                        className="seamless-input"
+                        value={rule.rightValue}
+                        onChange={e => updateRule(rule.id, 'rightValue', e.target.value)}
+                        onBlur={stopEditing}
+                        autoFocus
+                        placeholder="Enter value"
+                      />
+                    )
                   ) : (
-                    <span className="editable-prop" onClick={() => startEditing(rule.id,'rightFieldId')}>{getFieldName(rule.rightFieldId)}</span>
+                    <span className="editable-prop" onClick={() => startEditing(rule.id,'rightFieldId')}>
+                      {rule.rightMode === 'field'
+                        ? getFieldName(rule.rightFieldId)
+                        : (rule.rightValue || <span className="placeholder-text">Click to add...</span>)}
+                    </span>
                   )}
                 </div>
                 <div className="prop-cell prop-actions">
@@ -169,7 +195,7 @@ function ProcessRulesPage({ processId }) {
             className="metadata-field-row"
             cellClassName="prop-cell"
           >
-            <div className="prop-cell prop-name">
+            <div className="prop-cell prop-name" style={{ gap: '8px', alignItems: 'center' }}>
               <input
                 type="text"
                 value={newRuleName}
@@ -180,6 +206,10 @@ function ProcessRulesPage({ processId }) {
                 onKeyDown={e => { if (e.key === 'Enter' && newRuleName.trim()) handleAddRule(); }}
                 onBlur={() => { if (newRuleName.trim()) { handleAddRule(); } else { setAddingRule(false); setNewRuleName(''); } }}
               />
+              <label className="fx-switch" title="Toggle field/value">
+                <input type="checkbox" disabled />
+                <span className="fx-slider" />
+              </label>
             </div>
             <div className="prop-cell"><span className="editable-prop placeholder-text">Select field...</span></div>
             <div className="prop-cell"><span className="editable-prop placeholder-text">=</span></div>

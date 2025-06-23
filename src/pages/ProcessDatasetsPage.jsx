@@ -159,49 +159,55 @@ function ProcessDatasetsPage({ processId }) {
               expandedDatasetId === dataset.id && (
                 <div key={dataset.id + '-expanded'} className="metadata-field-row" style={{ background: '#faf9f6' }}>
                   <div className="prop-cell" colSpan={3} style={{ width: '100%', padding: 0 }}>
-                    <div style={{paddingLeft: '30px', width: '100%' }}>
+                    <div style={{ paddingLeft: '30px', width: '100%' }}>
                       {(dataset.items || []).map(item => (
-                        <div key={item.id} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
-                          <span style={{ minWidth: 80, marginRight: 8 }}>{item.value}</span>
-                          <button
-                            className="action-button delete"
-                            onClick={() => handleDeleteItem(dataset.id, item.id)}
-                            title="Delete item"
-                          >
-                            <Trash2 size={13} />
-                          </button>
+                        <div key={item.id} className="metadata-field-row" style={{ background: 'transparent', display: 'grid', gridTemplateColumns: '1fr 80px', alignItems: 'center', marginBottom: 0 }}>
+                          <div className="prop-cell prop-name">
+                            <span>{item.value}</span>
+                          </div>
+                          <div className="prop-cell prop-actions">
+                            <button
+                              className="action-button delete"
+                              onClick={() => handleDeleteItem(dataset.id, item.id)}
+                              title="Delete item"
+                            >
+                              <Trash2 size={13} />
+                            </button>
+                          </div>
                         </div>
                       ))}
                       {/* Inline add row for items */}
                       {addingItemId === dataset.id ? (
-                        <div style={{ display: 'flex', alignItems: 'center', marginTop: 4 }}>
-                          <input
-                            type="text"
-                            value={newItemValue}
-                            onChange={e => setNewItemValue(e.target.value)}
-                            placeholder="Value"
-                            className="seamless-input"
-                            style={{ marginRight: 8, flex: 1 }}
-                            autoFocus
-                            onKeyDown={e => {
-                              if (e.key === 'Enter' && newItemValue.trim()) {
-                                handleAddItem(dataset.id);
-                              }
-                            }}
-                            onBlur={() => {
-                              if (newItemValue.trim()) {
-                                handleAddItem(dataset.id);
-                              } else {
-                                setAddingItemId(null);
-                                setNewItemValue('');
-                              }
-                            }}
-                          />
+                        <div className="metadata-field-row" style={{ background: 'transparent', display: 'grid', gridTemplateColumns: '1fr 80px', alignItems: 'center', marginBottom: 0 }}>
+                          <div className="prop-cell prop-name">
+                            <input
+                              type="text"
+                              value={newItemValue}
+                              onChange={e => setNewItemValue(e.target.value)}
+                              placeholder="Value"
+                              className="seamless-input"
+                              autoFocus
+                              onKeyDown={e => {
+                                if (e.key === 'Enter' && newItemValue.trim()) {
+                                  handleAddItem(dataset.id);
+                                }
+                              }}
+                              onBlur={() => {
+                                if (newItemValue.trim()) {
+                                  handleAddItem(dataset.id);
+                                } else {
+                                  setAddingItemId(null);
+                                  setNewItemValue('');
+                                }
+                              }}
+                            />
+                          </div>
+                          <div className="prop-cell prop-actions"></div>
                         </div>
                       ) : (
                         <div
                           className="editable-prop"
-                          style={{ color: '#666', cursor: 'pointer', marginTop: 4 }}
+                          style={{ color: '#666', cursor: 'pointer', marginTop: 4 , width: 'fit-content' }}
                           onClick={() => setAddingItemId(dataset.id)}
                         >
                           Add an item
