@@ -258,6 +258,44 @@ class NotionService {
       }
     }
   }
+
+  // RULES CRUD
+  getRules(processId) {
+    const processes = this.getProcesses();
+    const process = processes.find(p => p.id === processId);
+    return process?.rules || [];
+  }
+
+  addRule(processId, rule) {
+    const processes = this.getProcesses();
+    const process = processes.find(p => p.id === processId);
+    if (process) {
+      if (!process.rules) process.rules = [];
+      process.rules.push(rule);
+      this.updateProcesses(processes);
+    }
+  }
+
+  updateRule(processId, ruleId, newRule) {
+    const processes = this.getProcesses();
+    const process = processes.find(p => p.id === processId);
+    if (process && process.rules) {
+      const idx = process.rules.findIndex(r => r.id === ruleId);
+      if (idx !== -1) {
+        process.rules[idx] = newRule;
+        this.updateProcesses(processes);
+      }
+    }
+  }
+
+  deleteRule(processId, ruleId) {
+    const processes = this.getProcesses();
+    const process = processes.find(p => p.id === processId);
+    if (process && process.rules) {
+      process.rules = process.rules.filter(r => r.id !== ruleId);
+      this.updateProcesses(processes);
+    }
+  }
 }
 
 const notionService = new NotionService();

@@ -4,6 +4,7 @@ import ProcessMetadataPage from './ProcessMetadataPage.jsx';
 import ProcessFormsListPage from './ProcessFormsListPage.jsx';
 import ProcessWorkflowPage from './ProcessWorkflowPage.jsx';
 import ProcessDatasetsPage from './ProcessDatasetsPage.jsx';
+import ProcessRulesPage from './ProcessRulesPage.jsx';
 
 function ProcessDynamicPage() {
   const { processId, submenu } = useParams();
@@ -24,6 +25,9 @@ function ProcessDynamicPage() {
   }
   if (submenu === 'datasets') {
     return <ProcessDatasetsPage processId={processId} />;
+  }
+  if (submenu === 'rules') {
+    return <ProcessRulesPage processId={processId} />;
   }
 
   return <div className="page-content">Page not found</div>;

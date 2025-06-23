@@ -28,11 +28,13 @@ function Sidebar() {
         { id: `metadata-${newId}`, name: 'Metadata', path: `/processes/${newId}/metadata`, description: 'Manage process configuration and metadata' },
         { id: `forms-${newId}`, name: 'Forms', path: `/processes/${newId}/forms`, description: 'Manage forms and data collection' },
         { id: `workflow-${newId}`, name: 'Workflow', path: `/processes/${newId}/workflow`, description: 'Design and manage process workflow' },
-        { id: `datasets-${newId}`, name: 'Datasets', path: `/processes/${newId}/datasets`, description: 'Reusable lists of options for select/dropdown fields.' }
+        { id: `datasets-${newId}`, name: 'Datasets', path: `/processes/${newId}/datasets`, description: 'Reusable lists of options for select/dropdown fields.' },
+        { id: `rules-${newId}`, name: 'Rules', path: `/processes/${newId}/rules`, description: 'Define logic rules for metadata fields' }
       ],
       metadataFields: [],
       forms: [],
-      workflow: { steps: [], settings: {} }
+      workflow: { steps: [], settings: {} },
+      rules: []
     };
     notionService.addProcess(newProcess);
     setProcesses(notionService.getProcesses());
@@ -102,7 +104,7 @@ function Sidebar() {
 
                   {isExpanded && (
                     <div className="process-submenu">
-                      {/* Always show Datasets submenu, even if missing from submenus */}
+                      {/* Always show Datasets and Rules submenus, even if missing from submenus */}
                       {(() => {
                         // Ensure Datasets submenu is present
                         const submenus = process.submenus ? [...process.submenus] : [];
@@ -112,6 +114,14 @@ function Sidebar() {
                             name: 'Datasets',
                             path: `/processes/${process.id}/datasets`,
                             description: 'Reusable lists of options for select/dropdown fields.'
+                          });
+                        }
+                        if (!submenus.some(sm => sm.name === 'Rules')) {
+                          submenus.push({
+                            id: `rules-${process.id}`,
+                            name: 'Rules',
+                            path: `/processes/${process.id}/rules`,
+                            description: 'Define logic rules for metadata fields'
                           });
                         }
                         return submenus.map((submenu) => {
