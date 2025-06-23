@@ -16,6 +16,7 @@ function ProcessRulesPage({ processId }) {
 
   const enterpriseFields = notionService.getEnterpriseFields();
   const metadataFields = [...enterpriseFields, ...(process.metadataFields || [])];
+  const datasets = notionService.getDatasets(processId);
   const rules = notionService.getRules(processId);
 
   const [addingRule, setAddingRule] = useState(false);
@@ -31,7 +32,7 @@ function ProcessRulesPage({ processId }) {
       name: newRuleName.trim(),
       leftFieldId: firstField,
       operator: '=',
-      rightFieldId: firstField
+      value: ''
     });
     setNewRuleName('');
     setAddingRule(false);
@@ -65,6 +66,20 @@ function ProcessRulesPage({ processId }) {
     return metadataFields.find(f => f.id === id)?.name || 'Unknown';
   };
 
+  const getFieldById = (id) => metadataFields.find(f => f.id === id);
+
+  const getDropdownOptions = (field) => {
+    if (!field) return [];
+    let options = field.options || [];
+    if (field.datasetId) {
+      const dataset = datasets.find(ds => ds.id === field.datasetId);
+      if (dataset && dataset.items) {
+        options = dataset.items.map(i => ({ value: i.value, label: i.label }));
+      }
+    }
+    return options;
+  };
+
   return (
     <div className="page-content">
       <div className="page-header">
@@ -75,9 +90,9 @@ function ProcessRulesPage({ processId }) {
         <div className="metadata-fields-grid">
           <div className="metadata-grid-header">
             <div className="header-name">Rule Name</div>
-            <div>Field A</div>
+            <div>Field</div>
             <div>Operator</div>
-            <div>Field B</div>
+            <div>Value</div>
             <div className="header-actions">Actions</div>
           </div>
           {rules.length === 0 ? (
@@ -138,20 +153,43 @@ function ProcessRulesPage({ processId }) {
                   )}
                 </div>
                 <div className="prop-cell">
-                  {editingField === rule.id && editingProp === 'rightFieldId' ? (
-                    <select
-                      className="seamless-input"
-                      value={rule.rightFieldId}
-                      onChange={e => updateRule(rule.id, 'rightFieldId', e.target.value)}
-                      onBlur={stopEditing}
-                      autoFocus
-                    >
-                      {metadataFields.map(f => (
-                        <option key={f.id} value={f.id}>{f.name}</option>
-                      ))}
-                    </select>
+                  {editingField === rule.id && editingProp === 'value' ? (
+                    (() => {
+                      const field = getFieldById(rule.leftFieldId);
+                      if (field && (field.type === 'select' || field.type === 'dropdown')) {
+                        const opts = getDropdownOptions(field);
+                        return (
+                          <select
+                            className="seamless-input"
+                            value={rule.value}
+                            onChange={e => updateRule(rule.id, 'value', e.target.value)}
+                            onBlur={stopEditing}
+                            autoFocus
+                          >
+                            {opts.map((o, idx) => (
+                              <option key={idx} value={o.value || o}>
+                                {o.label || o.value || o}
+                              </option>
+                            ))}
+                          </select>
+                        );
+                      }
+                      return (
+                        <input
+                          type="text"
+                          className="seamless-input"
+                          value={rule.value}
+                          onChange={e => updateRule(rule.id, 'value', e.target.value)}
+                          onBlur={stopEditing}
+                          onKeyDown={e => { if (e.key === 'Enter' || e.key === 'Escape') stopEditing(); }}
+                          autoFocus
+                        />
+                      );
+                    })()
                   ) : (
-                    <span className="editable-prop" onClick={() => startEditing(rule.id,'rightFieldId')}>{getFieldName(rule.rightFieldId)}</span>
+                    <span className="editable-prop" onClick={() => startEditing(rule.id,'value')}>
+                      {rule.value || 'Click to add...'}
+                    </span>
                   )}
                 </div>
                 <div className="prop-cell prop-actions">
@@ -183,7 +221,7 @@ function ProcessRulesPage({ processId }) {
             </div>
             <div className="prop-cell"><span className="editable-prop placeholder-text">Select field...</span></div>
             <div className="prop-cell"><span className="editable-prop placeholder-text">=</span></div>
-            <div className="prop-cell"><span className="editable-prop placeholder-text">Select field...</span></div>
+            <div className="prop-cell"><span className="editable-prop placeholder-text">Enter value...</span></div>
             <div className="prop-cell prop-actions"></div>
           </InlineAddRow>
         </div>

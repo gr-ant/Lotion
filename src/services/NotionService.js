@@ -188,6 +188,17 @@ class NotionService {
     return process?.datasets || [];
   }
 
+  getDatasetById(datasetId) {
+    const processes = this.getProcesses();
+    for (const process of processes) {
+      if (process.datasets) {
+        const ds = process.datasets.find(d => d.id === datasetId);
+        if (ds) return ds;
+      }
+    }
+    return null;
+  }
+
   addDataset(processId, dataset) {
     const processes = this.getProcesses();
     const process = processes.find(p => p.id === processId);

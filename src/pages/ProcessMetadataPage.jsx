@@ -127,6 +127,9 @@ function ProcessMetadataPage({ processId }) {
               <div className="prop-cell prop-type">
                 <span className="editable-prop type-tag" style={{ color: '#9b9a97', cursor: 'not-allowed' }}>{field.type}</span>
               </div>
+              <div className="prop-cell prop-dataset">
+                <span className="editable-prop placeholder-text" style={{ color: '#9b9a97', cursor: 'not-allowed' }}>N/A</span>
+              </div>
               <div className="prop-cell prop-required">
                 <span className={`editable-prop required-tag ${field.required ? 'yes' : 'no'}`} style={{ color: '#9b9a97', cursor: 'not-allowed' }}>{field.required ? 'Yes' : 'No'}</span>
               </div>
@@ -351,11 +354,11 @@ function ProcessMetadataPage({ processId }) {
             <div className="prop-cell prop-type">
               <span className="editable-prop type-tag">text</span>
             </div>
+            <div className="prop-cell prop-dataset">
+              <span className="editable-prop placeholder-text">N/A</span>
+            </div>
             <div className="prop-cell prop-required">
               <span className="editable-prop required-tag no">No</span>
-            </div>
-            <div className="prop-cell prop-desc">
-              <span className="editable-prop placeholder-text">Click to add...</span>
             </div>
             <div className="prop-cell prop-placeholder">
               <span className="editable-prop placeholder-text">Click to add...</span>
