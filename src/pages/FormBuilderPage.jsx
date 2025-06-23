@@ -2,14 +2,15 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { FileText, Trash2 } from 'lucide-react';
-import { getProcessById } from '../config.js';
+import notionService from '../services/NotionService.js';
 import FormRenderer from '../components/FormRenderer.jsx';
 import Modal from '../components/Modal.jsx';
+import './FormBuilderPage.css';
 
 function FormBuilderPage() {
   const { processId, formId } = useParams();
   const navigate = useNavigate();
-  const process = getProcessById(processId);
+  const process = notionService.getProcessById(processId);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleValue, setTitleValue] = useState('');
   const [contextMenu, setContextMenu] = useState(null);
@@ -18,30 +19,24 @@ function FormBuilderPage() {
 
   const metadataFields = useMemo(() => {
     const savedFields = localStorage.getItem(`metadataFields_${processId}`);
-    if (savedFields) {
-      return JSON.parse(savedFields);
-    }
-    return process?.metadataFields || [];
+    const processFields = savedFields ? JSON.parse(savedFields) : (process?.metadataFields || []);
+    const enterpriseFields = notionService.getEnterpriseFields();
+    return [...enterpriseFields, ...processFields];
   }, [processId, process]);
 
   const [form, setForm] = useState(() => {
-    const savedForms = localStorage.getItem(`forms_${processId}`);
-    if (savedForms) {
-      const forms = JSON.parse(savedForms);
-      const existingForm = forms.find(f => f.id === formId);
-      if (existingForm) {
-        return existingForm;
-      }
+    const forms = notionService.getForms(processId);
+    const existingForm = forms.find(f => f.id === formId);
+    if (existingForm) {
+      return existingForm;
     }
     return { id: formId, name: 'New Form', description: 'A new empty form.', layout: [] };
   });
 
   useEffect(() => {
-    const savedForms = localStorage.getItem(`forms_${processId}`);
-    const forms = savedForms ? JSON.parse(savedForms) : [];
-    const updatedForms = forms.filter(f => f.id !== formId);
-    updatedForms.push(form);
-    localStorage.setItem(`forms_${processId}`, JSON.stringify(updatedForms));
+    const forms = notionService.getForms(processId).filter(f => f.id !== formId);
+    forms.push(form);
+    notionService.updateForms(processId, forms);
   }, [form, processId, formId]);
 
   const onDragEnd = (result) => {
@@ -196,7 +191,7 @@ function FormBuilderPage() {
         </div>
 
         <div className="form-builder-layout">
-          <Droppable droppableId="availableFields">
+          <Droppable droppableId="availableFields" isDropDisabled={false}>
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps} className="form-builder-panel available-fields">
                 <h3>Available Fields</h3>
@@ -222,7 +217,7 @@ function FormBuilderPage() {
             )}
           </Droppable>
 
-          <Droppable droppableId="formLayout">
+          <Droppable droppableId="formLayout" isDropDisabled={false}>
             {(provided, snapshot) => (
               <div
                 ref={provided.innerRef}
@@ -286,7 +281,7 @@ function FormBuilderPage() {
 
         {showPreview && form.layout.length > 0 && (
           <Modal title={form.name} onClose={() => setShowPreview(false)}>
-            <FormRenderer form={form} metadataFields={metadataFields} isPreview={true} />
+            <FormRenderer form={form} metadataFields={metadataFields} isPreview={false} />
           </Modal>
         )}
 

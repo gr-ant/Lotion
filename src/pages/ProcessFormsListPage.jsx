@@ -1,22 +1,21 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Trash2, ChevronRight } from 'lucide-react';
-import { getProcessById } from '../config.js';
+import notionService from '../services/NotionService.js';
+import InlineAddRow from '../components/InlineAddRow.jsx';
+import './ProcessFormsListPage.css';
 
 function ProcessFormsListPage() {
   const { processId } = useParams();
   const navigate = useNavigate();
-  const process = getProcessById(processId);
+  const process = notionService.getProcessById(processId);
 
-  const [forms, setForms] = useState(() => {
-    const savedForms = localStorage.getItem(`forms_${processId}`);
-    return savedForms ? JSON.parse(savedForms) : (process?.forms || []);
-  });
+  const [forms, setForms] = useState(() => notionService.getForms(processId));
 
   const [hoveredFormId, setHoveredFormId] = useState(null);
 
   useEffect(() => {
-    localStorage.setItem(`forms_${processId}`, JSON.stringify(forms));
+    notionService.updateForms(processId, forms);
   }, [forms, processId]);
 
   const createNewForm = () => {
@@ -74,11 +73,16 @@ function ProcessFormsListPage() {
               </Link>
             ))
           )}
-          <div className="form-list-item skeleton-row" onClick={createNewForm}>
-            <div className="form-info">
-              <h4> Create a new form</h4>
-            </div>
-          </div>
+          <InlineAddRow
+            active={false}
+            onActivate={createNewForm}
+            label={
+              <div className="form-info">
+                <h4>Create a new form</h4>
+              </div>
+            }
+            className="form-list-item"
+          />
         </div>
       </div>
     </div>

@@ -1,0 +1,249 @@
+/* Metadata page styles for ProcessMetadataPage */
+
+.content-card {
+  background-color: #fbfbfa;
+  border: 1px solid #e3e2e0;
+  border-radius: 8px;
+  padding: 24px;
+  transition: box-shadow 0.2s;
+}
+
+.content-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.content-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #37352f;
+}
+
+.content-card p {
+  color: #787774;
+  font-size: 14px;
+}
+
+.content-card.full-width {
+  grid-column: 1 / -1;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.card-header h3 {
+  margin-bottom: 0;
+}
+
+/* Metadata fields grid */
+.metadata-fields-grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.metadata-grid-header,
+.metadata-field-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 3fr 3fr 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 8px 16px;
+}
+
+.metadata-grid-header {
+  font-size: 12px;
+  font-weight: 500;
+  color: #787774;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #e3e2e0;
+}
+
+.metadata-field-row {
+  border-bottom: 1px solid #f7f6f3;
+  align-items: stretch;
+}
+
+.metadata-field-row:last-child {
+  border-bottom: none;
+}
+
+.prop-cell {
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.editable-prop {
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 4px;
+  width: 100%;
+  transition: background-color 0.2s;
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  word-break: break-word;
+}
+
+.editable-prop:hover {
+  background-color: #f7f6f3;
+}
+
+.editable-prop.placeholder-text {
+  color: #9b9a97;
+  font-style: italic;
+}
+
+.type-tag {
+  font-size: 13px;
+  text-transform: capitalize;
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+
+.type-tag:hover {
+  border-color: #d3d2d0;
+}
+
+.seamless-input {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 6px 8px;
+  width: 100%;
+  box-shadow: 0 0 0 2px #2e75cc inset;
+  border-radius: 4px;
+}
+
+.required-tag {
+  font-size: 13px;
+  text-transform: capitalize;
+  font-weight: 500;
+  border: 1px solid transparent;
+  width: auto;
+  min-width: 50px;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.required-tag:hover {
+  border-color: #d3d2d0;
+}
+
+.required-tag.yes {
+  color: #2f6f4c;
+  background-color: #eaf5f0;
+}
+
+.required-tag.no {
+  color: #ae3737;
+  background-color: #fbecec;
+}
+
+.prop-actions {
+  justify-content: center;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #37352f;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-button:hover {
+  background-color: #f7f6f3;
+  border-color: #d3d2d0;
+}
+
+.action-button.delete:hover {
+  background-color: #fbecec;
+  border-color: #ae3737;
+  color: #ae3737;
+}
+
+/* Skeleton row styles */
+.skeleton-row {
+  cursor: pointer;
+  color: #787774;
+  transition: background-color 0.2s;
+}
+
+.skeleton-row:hover {
+  background-color: #f7f6f3;
+}
+
+.metadata-field-row.skeleton-row .prop-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  grid-column: 1 / -1;
+  padding-left: 8px;
+  font-weight: 500;
+}
+
+/* Empty fields placeholder */
+.empty-fields-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  border: 2px dashed #e3e2e0;
+  border-radius: 6px;
+  color: #787774;
+  font-size: 13px;
+  margin: 16px 0;
+}
+
+@media (max-width: 768px) {
+  .metadata-grid-header,
+  .metadata-field-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 12px;
+  }
+  
+  .metadata-grid-header {
+    display: none;
+  }
+  
+  .metadata-field-row {
+    border: 1px solid #e3e2e0;
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+  
+  .prop-cell {
+    padding: 4px 0;
+  }
+  
+  .prop-cell::before {
+    content: attr(data-label);
+    font-weight: 500;
+    color: #787774;
+    font-size: 12px;
+    margin-right: 8px;
+  }
+} 

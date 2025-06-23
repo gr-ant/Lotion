@@ -1,0 +1,459 @@
+/* Workflow page styles - Aligned with Metadata/Forms pages */
+
+/* Using styles from ProcessMetadataPage.css for consistency */
+
+.metadata-fields-grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.metadata-grid-header,
+.metadata-field-row {
+  display: grid;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 16px;
+  border-bottom: 1px solid #f7f6f3;
+}
+
+.metadata-grid-header {
+  /* Before: grid-template-columns: 2fr 1fr 1.5fr 1.5fr 150px; */
+  /* Fix: Add a column for Actions */
+  grid-template-columns: 2fr 1fr 1.5fr 1.5fr 1.5fr 50px; /* Adjusted to 6 columns. Adjust 'fr' values if needed for spacing. */
+  font-size: 12px;
+  font-weight: 500;
+  color: #787774;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #e3e2e0;
+}
+
+.metadata-field-row {
+  /* Before: grid-template-columns: 2fr 1fr 1.5fr 1.5fr 150px; */
+  /* Fix: Ensure this also matches the 6 columns */
+  grid-template-columns: 2fr 1fr 1.5fr 1.5fr 1.5fr 50px; /* Adjusted to 6 columns. Should match header. */
+  transition: background-color 0.2s;
+}
+
+.metadata-field-row:last-child {
+  border-bottom: none;
+}
+
+.metadata-field-row:hover {
+  background-color: #f7f6f3;
+}
+
+.prop-cell {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  min-height: 30px;
+}
+
+.prop-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Other shared styles like .editable-prop, .seamless-input, etc. are assumed to be available globally or should be imported. */
+.editable-prop {
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 4px;
+  width: 100%;
+  transition: background-color 0.2s;
+  white-space: normal;
+}
+
+.editable-prop:hover {
+  background-color: #f0f0ef;
+}
+
+.type-tag {
+  font-size: 13px;
+  text-transform: capitalize;
+  font-weight: 500;
+}
+
+.seamless-input {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 6px 8px;
+  width: 100%;
+  box-shadow: 0 0 0 2px #2e75cc inset;
+  border-radius: 4px;
+}
+
+.action-button.delete:hover {
+  background-color: #fbecec;
+  border-color: #ae3737;
+  color: #ae3737;
+}
+
+.empty-fields-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  border: 2px dashed #e3e2e0;
+  border-radius: 6px;
+  color: #787774;
+  font-size: 13px;
+  margin: 16px 0;
+  grid-column: 1 / -1;
+}
+
+.card-header .btn.btn-secondary {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background-color: transparent;
+    border: 1px solid #d3d2d0;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #37352f;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.card-header .btn.btn-secondary:hover {
+    background-color: #f7f6f3;
+}
+
+/* Workflow table and step styles for ProcessWorkflowPage */
+
+.workflow-table {
+  display: table;
+  width: 100%;
+  max-width: 1200px;
+  border-collapse: collapse;
+  background: #ffffff;
+  border: 1px solid #e3e2e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.workflow-table-header {
+  display: table-row;
+  background-color: #f7f6f3;
+  border-bottom: 2px solid #e3e2e0;
+}
+
+.header-cell {
+  display: table-cell;
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #37352f;
+  text-align: left;
+  vertical-align: middle;
+  border-right: 1px solid #e3e2e0;
+}
+
+.header-cell:last-child {
+  border-right: none;
+}
+
+.workflow-table-body {
+  display: table-row-group;
+}
+
+.workflow-table-row {
+  display: table-row;
+  transition: all 0.2s ease;
+  cursor: grab;
+}
+
+.workflow-table-row:hover {
+  background-color: #f7f6f3;
+}
+
+.workflow-table-row.dragging {
+  opacity: 0.5;
+  transform: rotate(1deg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.workflow-table-row.drag-over {
+  border-top: 2px solid #007aff;
+  background-color: #f0f8ff;
+}
+
+.table-cell {
+  display: table-cell;
+  padding: 12px 16px;
+  vertical-align: middle;
+  border-right: 1px solid #e3e2e0;
+  border-bottom: 1px solid #e3e2e0;
+}
+
+.table-cell:last-child {
+  border-right: none;
+}
+
+/* Column widths */
+.drag-cell {
+  width: 50px;
+  text-align: center;
+}
+
+.number-cell {
+  width: 60px;
+  text-align: center;
+}
+
+.name-cell {
+  width: 250px;
+}
+
+.form-cell {
+  width: 200px;
+}
+
+.assigned-cell {
+  width: 200px;
+}
+
+.actions-cell {
+  width: 80px;
+  text-align: center;
+}
+
+/* Skeleton row styles */
+.workflow-table-row.skeleton-row {
+  border: 2px dashed #e3e2e0;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.workflow-table-row.skeleton-row:hover {
+  border-color: #d3d2d0;
+  background-color: #f7f6f3;
+}
+
+.workflow-table-row.skeleton-row.clickable:hover {
+  border-color: #007aff;
+  background-color: #f0f8ff;
+}
+
+.workflow-table-row.skeleton-row .table-cell {
+  border: none;
+}
+
+/* Step content styles */
+.step-drag-handle {
+  color: #787774;
+  cursor: grab;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-drag-handle:hover {
+  background-color: #e3e2e0;
+}
+
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: #37352f;
+  color: #ffffff;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0 auto;
+}
+
+.skeleton-row .step-number {
+  background-color: #787774;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.step-name .editable-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #37352f;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  display: block;
+}
+
+.step-name .editable-text:hover {
+  background-color: #f7f6f3;
+}
+
+.step-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.step-form .editable-text {
+  font-size: 14px;
+  color: #787774;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  display: block;
+}
+
+.step-form .editable-text:hover {
+  background-color: #f7f6f3;
+}
+
+.step-assigned {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.step-assigned .editable-text {
+  font-size: 14px;
+  color: #787774;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  display: block;
+}
+
+.step-assigned .editable-text:hover {
+  background-color: #f7f6f3;
+}
+
+.placeholder-text {
+  color: #9b9a97;
+  font-style: italic;
+}
+
+.step-actions {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  padding: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #787774;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon:hover {
+  background-color: #e3e2e0;
+  color: #37352f;
+}
+
+.btn-icon-danger:hover {
+  background-color: #ffebe6;
+  color: #d73a49;
+}
+
+/* Inline editing styles */
+.inline-edit-input {
+  font-size: 16px;
+  font-weight: 600;
+  color: #37352f;
+  background: #ffffff;
+  border: 2px solid #007aff;
+  border-radius: 4px;
+  padding: 4px 8px;
+  width: 100%;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.inline-edit-input:focus {
+  border-color: #007aff;
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+}
+
+.inline-edit-select {
+  font-size: 14px;
+  color: #37352f;
+  background: #ffffff;
+  border: 2px solid #007aff;
+  border-radius: 4px;
+  padding: 4px 8px;
+  width: 100%;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.inline-edit-select:focus {
+  border-color: #007aff;
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+}
+
+@media (max-width: 1024px) {
+  .workflow-table {
+    font-size: 14px;
+  }
+  .name-cell {
+    width: 200px;
+  }
+  .form-cell,
+  .assigned-cell {
+    width: 150px;
+  }
+}
+
+@media (max-width: 768px) {
+  .workflow-table {
+    display: block;
+    overflow-x: auto;
+  }
+  .workflow-table-header,
+  .workflow-table-body {
+    display: block;
+  }
+  .workflow-table-row {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 12px;
+    border-bottom: 1px solid #e3e2e0;
+  }
+  .table-cell {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border: none;
+    min-width: 120px;
+  }
+  .drag-cell {
+    width: 40px;
+    min-width: 40px;
+  }
+  .number-cell {
+    width: 50px;
+    min-width: 50px;
+  }
+  .actions-cell {
+    width: 60px;
+    min-width: 60px;
+  }
+} 

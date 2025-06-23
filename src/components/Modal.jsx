@@ -1,17 +1,24 @@
-import ReactDOM from 'react-dom';
+import React from 'react';
+import { X } from 'lucide-react';
+import './Modal.css';
 
-function Modal({ title, onClose, children }) {
-  return ReactDOM.createPortal(
+function Modal({ title, children, onClose, size = 'medium' }) {
+  const sizeClass = `modal-${size}`;
+
+  return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
+      <div className={`modal ${sizeClass}`} onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h3>{title}</h3>
-          <button className="close-button" onClick={onClose}>&times;</button>
+          <h2>{title}</h2>
+          <button className="modal-close" onClick={onClose}>
+            <X size={20} />
+          </button>
         </div>
-        <div className="modal-content">{children}</div>
+        <div className="modal-content">
+          {children}
+        </div>
       </div>
-    </div>,
-    document.body
+    </div>
   );
 }
 

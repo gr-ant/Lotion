@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
+import './BooleanSelector.css';
 
 function BooleanSelector({ onSelect, onClose, targetRef }) {
   const [position, setPosition] = useState(null);

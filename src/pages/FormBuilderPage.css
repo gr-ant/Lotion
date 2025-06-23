@@ -1,0 +1,345 @@
+/* Form builder page styles for FormBuilderPage */
+
+.form-builder-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.form-builder-panel {
+  background-color: #fbfbfa;
+  border: 1px solid #e3e2e0;
+  border-radius: 8px;
+  padding: 16px;
+  height: fit-content;
+  min-height: 400px;
+}
+
+.form-builder-panel h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.form-builder-panel p {
+  font-size: 13px;
+  color: #787774;
+  margin-bottom: 16px;
+}
+
+.form-builder-panel.dragging-over {
+  background-color: #f7f6f3;
+  border-color: #d3d2d0;
+}
+
+/* Form Preview Section */
+.form-preview-section {
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 1px solid #e3e2e0;
+}
+
+.form-preview-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #37352f;
+  margin-bottom: 16px;
+}
+
+/* Two-column form layout */
+.form-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-column h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #787774;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e3e2e0;
+}
+
+/* New form layout system */
+.form-fields-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  min-height: 75px;
+  position: relative;
+}
+
+.form-layout-field {
+  grid-column: span 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-layout-field.full-width {
+  grid-column: span 2;
+}
+
+.field-full-width {
+  font-size: 11px;
+  color: #2e75cc;
+  background-color: #e8f2ff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+/* Context menu styles */
+.context-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3000;
+}
+
+.context-menu {
+  position: absolute;
+  background-color: #ffffff;
+  border: 1px solid #e3e2e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  min-width: 280px;
+  max-width: 320px;
+  z-index: 3001;
+}
+
+.context-menu-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e3e2e0;
+}
+
+.context-menu-header h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #37352f;
+  margin: 0;
+}
+
+.context-menu-empty {
+  padding: 16px;
+  text-align: center;
+  color: #787774;
+  font-size: 13px;
+}
+
+.context-menu-items {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.context-menu-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f7f6f3;
+  transition: background-color 0.2s;
+}
+
+.context-menu-item:hover {
+  background-color: #f7f6f3;
+  cursor: pointer;
+}
+
+.context-menu-item:last-child {
+  border-bottom: none;
+}
+
+.context-menu-field-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.context-menu-field-info .field-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #37352f;
+}
+
+.context-menu-field-info .field-type {
+  font-size: 11px;
+  color: #9b9a97;
+  background-color: #f7f6f3;
+  padding: 2px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.context-menu-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.context-menu-btn {
+  flex: 1;
+  padding: 6px 12px;
+  background-color: #ffffff;
+  border: 1px solid #e3e2e0;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #37352f;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.context-menu-btn:hover {
+  background-color: #f7f6f3;
+  border-color: #d3d2d0;
+}
+
+.context-menu-btn:active {
+  background-color: #e3e2e0;
+}
+
+/* Form builder field styles */
+.form-builder-field, .form-layout-field {
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  background-color: #ffffff;
+  border: 1px solid #e3e2e0;
+  border-radius: 6px;
+  cursor: grab;
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.form-builder-field.dragging, .form-layout-field.dragging {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  background-color: #f7f6f3;
+  transform: none;
+}
+
+.form-builder-field h4 {
+  font-size: 13px;
+  font-weight: 500;
+  margin: 0 0 4px;
+}
+
+.empty-form-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 32px;
+  border: 2px dashed #e3e2e0;
+  border-radius: 6px;
+  height: 100%;
+  min-height: 200px;
+  color: #787774;
+  grid-column: span 2;
+}
+
+.field-info h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #37352f;
+  margin-bottom: 4px;
+}
+
+.field-info p {
+  font-size: 12px;
+  color: #787774;
+  margin-bottom: 8px;
+}
+
+.field-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.field-type {
+  font-size: 11px;
+  color: #9b9a97;
+  background-color: #f7f6f3;
+  padding: 2px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.field-required {
+  font-size: 11px;
+  color: #d73a49;
+  background-color: #ffeef0;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.seamless-input {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 6px 8px;
+  width: 100%;
+  box-shadow: 0 0 0 2px #2e75cc inset;
+  border-radius: 4px;
+}
+
+.page-title-input {
+  font-size: 32px;
+  font-weight: 700;
+  color: #37352f;
+  padding: 0;
+  box-shadow: 0 0 0 2px #2e75cc inset;
+  border-radius: 4px;
+  margin: -4px 0;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #37352f;
+  padding: 0;
+  margin: -4px 0;
+  min-height: 44px;
+}
+
+.primary-button {
+  background-color: #007aff;
+  color: #ffffff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.primary-button:hover {
+  background-color: #0056cc;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .form-builder-layout {
+    grid-template-columns: 1fr;
+  }
+} 

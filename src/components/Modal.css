@@ -1,0 +1,93 @@
+/* Modal styles - Rewritten */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  align-items: center; /* Center modal vertically */
+  justify-content: center; /* Center modal horizontally */
+  z-index: 1000; /* Ensure it's above other content */
+}
+
+.modal {
+  background: #ffffff; /* White background */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); /* Prominent shadow */
+  max-width: 90vw; /* Maximum width relative to viewport */
+  max-height: 90vh; /* Maximum height relative to viewport */
+  overflow: hidden; /* Hide overflow from rounded corners */
+  display: flex;
+  flex-direction: column; /* Stack header, content, footer vertically */
+  width: auto; /* Allow content to dictate initial width */
+  position: relative; /* Needed for absolute positioning of close button */
+}
+
+.modal-header {
+  padding: 24px 32px 16px; /* Padding around header content */
+  border-bottom: 1px solid #e3e2e0; /* Separator line */
+  background-color: #fbfbfa; /* Slightly off-white background */
+  display: flex; /* Use flex for title and close button alignment if needed in future */
+  justify-content: space-between; /* Space out title and close button */
+  align-items: center; /* Align items vertically */
+}
+
+.modal-header h2 {
+  margin: 0; /* Remove default margin */
+  font-size: 20px; /* Title font size */
+  font-weight: 600; /* Semi-bold font weight */
+  color: #37352f; /* Dark grey text color */
+}
+
+.modal-content {
+  flex: 1; /* Allow content to grow and shrink */
+  overflow-y: auto; /* Enable vertical scrolling for content if it overflows */
+  padding: 0; /* No default padding on the content wrapper */
+  width: 100%; /* Take full width of parent */
+}
+
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none; /* No background */
+  border: none; /* No border */
+  font-size: 24px; /* Icon size */
+  cursor: pointer; /* Indicate clickable */
+  color: #787774; /* Grey icon color */
+  padding: 4px; /* Padding around icon for click area */
+  border-radius: 4px; /* Slightly rounded corners for hover effect */
+  transition: background-color 0.2s; /* Smooth transition for hover */
+}
+
+.modal-close:hover {
+  background-color: #e3e2e0; /* Light grey background on hover */
+  color: #37352f; /* Darker text color on hover */
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .modal {
+    margin: 10px; /* Add some margin on smaller screens */
+    max-width: none; /* Allow modal to take full available width */
+    width: calc(100% - 20px); /* Adjust width to account for margin */
+    min-width: unset; /* Remove minimum width constraint */
+  }
+}
+
+/* Specific modal sizes */
+.modal-medium {
+  min-width: 600px;
+  max-width: 700px; /* Added a max-width for better control on large screens */
+}
+.modal-large {
+  min-width: 800px;
+  max-width: 900px; /* Added a max-width */
+}
+.modal-xlarge {
+  min-width: 1000px;
+  max-width: 1100px; /* Added a max-width */
+}

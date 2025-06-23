@@ -1,0 +1,166 @@
+/* Forms list page styles for ProcessFormsListPage */
+
+.forms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background-color: #ffffff;
+  border: 1px solid #e3e2e0;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #37352f;
+  transition: all 0.2s;
+}
+
+.form-list-item:hover {
+  border-color: #d3d2d0;
+  background-color: #f7f6f3;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.form-list-item .form-info h4 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.form-list-item .form-info p {
+  font-size: 13px;
+  color: #787774;
+  margin: 0;
+}
+
+.form-list-item svg {
+  color: #9b9a97;
+  transition: transform 0.2s;
+}
+
+.form-list-item:hover svg {
+  transform: translateX(4px);
+}
+
+.form-list-item:hover .form-list-arrow {
+  transform: translateX(4px);
+}
+
+.form-list-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.form-list-item .action-button.delete {
+  opacity: 0;
+  transition: opacity 0.2s, background-color 0.2s;
+}
+
+.form-list-item:hover .action-button.delete {
+  opacity: 1;
+}
+
+.delete-warning {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #ae3737;
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  margin-right: 8px;
+  animation: slideIn 0.2s ease-out;
+  z-index: 10;
+}
+
+.delete-warning::after {
+  content: '';
+  position: absolute;
+  right: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 4px solid #ae3737;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+/* Empty forms placeholder */
+.empty-forms-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px;
+  border: 2px dashed #e3e2e0;
+  border-radius: 6px;
+  color: #787774;
+  font-size: 14px;
+}
+
+/* Skeleton row styles */
+.form-list-item.skeleton-row {
+  border: 2px dashed #e3e2e0;
+  background-color: transparent;
+  justify-content: center;
+}
+
+.form-list-item.skeleton-row:hover {
+  background-color: #f7f6f3;
+  border-color: #d3d2d0;
+}
+
+.form-list-item.skeleton-row h4 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: #787774;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #37352f;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-button:hover {
+  background-color: #f7f6f3;
+  border-color: #d3d2d0;
+}
+
+.action-button.delete:hover {
+  background-color: #fbecec;
+  border-color: #ae3737;
+  color: #ae3737;
+} 

@@ -1,0 +1,80 @@
+/* Base grid styles copied from ProcessMetadataPage.css */
+.metadata-fields-grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.metadata-grid-header,
+.metadata-field-row {
+  display: grid;
+  gap: 16px;
+  align-items: center;
+  padding: 8px 16px;
+}
+
+.metadata-grid-header {
+  font-size: 12px;
+  font-weight: 500;
+  color: #787774;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #e3e2e0;
+}
+
+.metadata-field-row {
+  border-bottom: 1px solid #f7f6f3;
+}
+
+.metadata-field-row:last-child {
+  border-bottom: none;
+}
+
+.prop-cell {
+  display: flex;
+  align-items: stretch;
+  /* Allow content to wrap and expand */
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  word-break: break-word;
+}
+
+.prop-cell:hover {
+  background-color: #f7f6f3;
+  cursor: pointer;
+  width: 100%;
+}
+
+.prop-cell.prop-actions {
+  justify-content: flex-start;
+  gap: 4px; /* Add a small gap between buttons */
+}
+
+.user-search-container {
+  width: fit-content;
+}
+
+.editable-prop {
+  width: 100%;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  word-break: break-word;
+}
+
+.user-groups-grid-container .metadata-grid-header,
+.user-groups-grid-container .metadata-field-row {
+    grid-template-columns: 2fr 3fr 150px;
+}
+
+
+
+.user-management-modal-grid .metadata-field-row,
+.user-management-modal-grid .metadata-grid-header {
+  width: 100%;
+}
+
+/* Updated class name for modal content padding */
+.modal-body-content {
+    padding: 32px;
+}
