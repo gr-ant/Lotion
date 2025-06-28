@@ -3,7 +3,7 @@ import './FormRenderer.css';
 import { config } from '../config.js';
 import notionService from '../services/NotionService.js';
 
-const FormRenderer = ({ form, metadataFields, onSubmit, isPreview = false }) => {
+const FormRenderer = ({ form, metadataFields, onSubmit, isPreview = false, processId: propProcessId }) => {
   const [values, setValues] = useState(() => {
     const initial = {};
     (form.layout || []).forEach(item => {
@@ -70,8 +70,21 @@ const FormRenderer = ({ form, metadataFields, onSubmit, isPreview = false }) => 
 
   const users = notionService.getUsers();
 
-  // Get datasets for this process if processId is available on the form
-  const datasets = form.processId ? notionService.getDatasets(form.processId) : [];
+  // Use processId prop if provided, otherwise fall back to form.processId
+  const processId = propProcessId || form.processId;
+
+  console.log('Process ID:', processId);
+
+  const datasets = processId ? notionService.getDatasets(processId) : [];
+
+  console.log(datasets, 'datasets in form renderer');
+
+  const getLayoutItem = (fieldId) => {
+    if (form && Array.isArray(form.layout)) {
+      return form.layout.find(item => item.metadataFieldId === fieldId);
+    }
+    return null;
+  };
 
   const renderField = (item) => {
     const meta = getFieldById(item.metadataFieldId);
@@ -80,6 +93,8 @@ const FormRenderer = ({ form, metadataFields, onSubmit, isPreview = false }) => 
     const value = values[meta.id] !== undefined ? values[meta.id] : '';
     const error = errors[meta.id];
     const isRequired = meta.required;
+    const layoutItem = getLayoutItem(meta.id);
+    const isReadOnly = layoutItem && layoutItem.readOnly;
 
     const commonProps = {
       id: meta.id,
@@ -88,12 +103,13 @@ const FormRenderer = ({ form, metadataFields, onSubmit, isPreview = false }) => 
       onChange: (e) => handleChange(meta.id, e.target.value),
       placeholder: meta.placeholder || `Enter ${meta.name.toLowerCase()}`,
       className: `form-input ${error ? 'error' : ''}`,
-      disabled: isPreview
+      disabled: isPreview || isReadOnly
     };
 
     const renderInput = () => {
       switch (meta.type) {
         case 'textarea':
+          if (isReadOnly) return <div style={{ fontWeight: 'bold' }}>{value}</div>;
           return (
             <textarea
               {...commonProps}
@@ -101,29 +117,39 @@ const FormRenderer = ({ form, metadataFields, onSubmit, isPreview = false }) => 
               className={`form-textarea ${error ? 'error' : ''}`}
             />
           );
-
         case 'select':
         case 'dropdown':
-          // If meta.datasetId is set, use dataset items as options
           let options = meta.options || [];
           if (meta.datasetId) {
             const dataset = datasets.find(ds => ds.id === meta.datasetId);
             if (dataset && dataset.items) {
-              options = dataset.items.map(item => ({ value: item.value, label: item.label }));
+              options = dataset.items.map(item => ({ value: item.value, label: item.label || item.value, id: item.id }));
             }
           }
+          if (isReadOnly) {
+            let display = value;
+            if (meta.datasetId) {
+              const dataset = datasets.find(ds => ds.id === meta.datasetId);
+              const item = dataset?.items.find(i => i.id === value || i.value === value);
+              display = item?.label || item?.value || '';
+            } else {
+              const option = options.find(o => o.value === value);
+              display = option?.label || option?.value || value;
+            }
+            return <div style={{ fontWeight: 'bold' }}>{display}</div>;
+          }
           return (
-            <select {...commonProps} className={`form-select ${error ? 'error' : ''}`}>
+            <select {...commonProps} className={`form-select ${error ? 'error' : ''}`}> 
               <option value="">Select an option</option>
               {options.map((option, index) => (
-                <option key={index} value={option.value || option}>
+                <option key={option.id || index} value={option.value || option}>
                   {option.label || option.value || option}
                 </option>
               ))}
             </select>
           );
-
         case 'boolean':
+          if (isReadOnly) return <div style={{ fontWeight: 'bold' }}>{value ? 'Yes' : 'No'}</div>;
           return (
             <div className="boolean-input">
               <label className="checkbox-label">
@@ -131,15 +157,18 @@ const FormRenderer = ({ form, metadataFields, onSubmit, isPreview = false }) => 
                   type="checkbox"
                   checked={value === 'true' || value === true}
                   onChange={(e) => handleChange(meta.id, e.target.checked)}
-                  disabled={isPreview}
+                  disabled={isReadOnly}
                 />
                 <span className="checkmark"></span>
                 {meta.placeholder || `Check if ${meta.name.toLowerCase()}`}
               </label>
             </div>
           );
-
         case 'user':
+          if (isReadOnly) {
+            const user = users.find(u => u.id === value);
+            return <div style={{ fontWeight: 'bold' }}>{user ? user.name : ''}</div>;
+          }
           return (
             <div style={{ position: 'relative' }}>
               <input
@@ -153,7 +182,7 @@ const FormRenderer = ({ form, metadataFields, onSubmit, isPreview = false }) => 
                 }}
                 onFocus={() => setUserDropdownOpen(o => ({ ...o, [meta.id]: true }))}
                 onBlur={() => setTimeout(() => setUserDropdownOpen(o => ({ ...o, [meta.id]: false })), 150)}
-                disabled={isPreview}
+                disabled={isReadOnly}
               />
               {userDropdownOpen[meta.id] && (
                 <div className="user-search-dropdown" style={{ position: 'absolute', zIndex: 10, background: '#fff', border: '1px solid #e3e2e0', borderRadius: 4, width: '100%', maxHeight: 180, overflowY: 'auto' }}>
@@ -186,8 +215,11 @@ const FormRenderer = ({ form, metadataFields, onSubmit, isPreview = false }) => 
               )}
             </div>
           );
-
         case 'users':
+          if (isReadOnly) {
+            const selectedUsers = users.filter(u => (Array.isArray(value) ? value.includes(u.id) : false));
+            return <div style={{ fontWeight: 'bold' }}>{selectedUsers.map(u => u.name).join(', ')}</div>;
+          }
           return (
             <select
               {...commonProps}
@@ -208,17 +240,17 @@ const FormRenderer = ({ form, metadataFields, onSubmit, isPreview = false }) => 
               ))}
             </select>
           );
-
         case 'date':
+          if (isReadOnly) return <div style={{ fontWeight: 'bold' }}>{value}</div>;
           return <input {...commonProps} type="date" />;
-
         case 'email':
+          if (isReadOnly) return <div style={{ fontWeight: 'bold' }}>{value}</div>;
           return <input {...commonProps} type="email" />;
-
         case 'number':
+          if (isReadOnly) return <div style={{ fontWeight: 'bold' }}>{value}</div>;
           return <input {...commonProps} type="number" />;
-
         case 'currency':
+          if (isReadOnly) return <div style={{ fontWeight: 'bold' }}>${value}</div>;
           return (
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <span style={{ marginRight: 4 }}>$</span>
@@ -241,32 +273,36 @@ const FormRenderer = ({ form, metadataFields, onSubmit, isPreview = false }) => 
               />
             </div>
           );
-
         case 'yes/no':
+          if (isReadOnly) return <div style={{ fontWeight: 'bold' }}>{value === true ? 'Yes' : value === false ? 'No' : ''}</div>;
           return (
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  checked={value === true}
-                  onChange={() => handleChange(meta.id, true)}
-                  disabled={isPreview}
-                />
-                Yes
-              </label>
-              <label style={{ marginLeft: 16 }}>
-                <input
-                  type="radio"
-                  checked={value === false}
-                  onChange={() => handleChange(meta.id, false)}
-                  disabled={isPreview}
-                />
-                No
-              </label>
+            <div className="form-field-row">
+              <label>{meta.name}{isRequired && ' *'}</label>
+              <div>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={value === true}
+                    onChange={(e) => handleChange(meta.id, e.target.checked)}
+                    disabled={isReadOnly}
+                  />
+                  Yes
+                </label>
+                <label style={{ marginLeft: 16 }}>
+                  <input
+                    type="checkbox"
+                    checked={value === false}
+                    onChange={(e) => handleChange(meta.id, e.target.checked)}
+                    disabled={isReadOnly}
+                  />
+                  No
+                </label>
+              </div>
+              {error && <span className="error-message">{error}</span>}
             </div>
           );
-
         default:
+          if (isReadOnly) return <div style={{ fontWeight: 'bold' }}>{value}</div>;
           return <input {...commonProps} type="text" />;
       }
     };

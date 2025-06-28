@@ -17,9 +17,7 @@
 }
 
 .metadata-grid-header {
-  /* Before: grid-template-columns: 2fr 1fr 1.5fr 1.5fr 150px; */
-  /* Fix: Add a column for Actions */
-  grid-template-columns: 2fr 1fr 1.5fr 1.5fr 1.5fr 50px; /* Adjusted to 6 columns. Adjust 'fr' values if needed for spacing. */
+  grid-template-columns: 2fr 1.5fr 1.5fr 80px; /* Removed Type column */
   font-size: 12px;
   font-weight: 500;
   color: #787774;
@@ -29,9 +27,7 @@
 }
 
 .metadata-field-row {
-  /* Before: grid-template-columns: 2fr 1fr 1.5fr 1.5fr 150px; */
-  /* Fix: Ensure this also matches the 6 columns */
-  grid-template-columns: 2fr 1fr 1.5fr 1.5fr 1.5fr 50px; /* Adjusted to 6 columns. Should match header. */
+  grid-template-columns: 2fr 1.5fr 1.5fr 80px; /* Removed Type column */
   transition: background-color 0.2s;
 }
 
@@ -41,6 +37,24 @@
 
 .metadata-field-row:hover {
   background-color: #f7f6f3;
+}
+
+.metadata-field-row.clickable-row {
+  cursor: pointer;
+  position: relative;
+}
+
+.metadata-field-row.clickable-row:hover {
+  background-color: #f0f0ef;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.metadata-field-row.clickable-row:active {
+  background-color: #e8e8e6;
+}
+
+.metadata-field-row.clickable-row .prop-cell span {
+  cursor: pointer;
 }
 
 .prop-cell {
@@ -456,4 +470,4 @@
     width: 60px;
     min-width: 60px;
   }
-} 
+}

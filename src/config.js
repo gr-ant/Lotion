@@ -100,6 +100,14 @@ export const config = {
         readOnly: true
       },
       {
+        id: 'enterprise_title',
+        name: 'Title',
+        type: 'text',
+        required: true,
+        description: 'Title or name of the process instance',
+        placeholder: 'Enter a descriptive title'
+      },
+      {
         id: 'enterprise_assigned_to',
         name: 'Assigned To',
         type: 'user',
@@ -115,7 +123,31 @@ export const config = {
         description: 'Date the process was created',
         placeholder: 'Auto-generated',
         readOnly: true
-      }
+      },
+      {
+        id: 'enterprise_status',
+        name: 'Status',
+        type: 'select',
+        required: true,
+        description: 'Status of Flow',
+        placeholder: '...',
+        readOnly: true,
+        datasetId: 'enterprise_status'
+      },
+      {
+        id: 'enterprise_priority',
+        name: 'Priority',
+        type: 'select',
+        required: false,
+        description: 'Priority level of the process',
+        placeholder: 'Select priority...',
+        options: [
+          { value: 'low', label: 'Low' },
+          { value: 'medium', label: 'Medium' },
+          { value: 'high', label: 'High' },
+          { value: 'urgent', label: 'Urgent' }
+        ]
+      },
     ]
   },
   processes: [],

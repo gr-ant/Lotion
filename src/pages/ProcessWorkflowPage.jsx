@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Plus, Settings, FileText, ArrowUp, ArrowDown, Trash2, Users } from 'lucide-react';
 import notionService from '../services/NotionService.js';
 import WorkflowModel from '../models/WorkflowModel.js';
@@ -9,6 +10,7 @@ import './ProcessWorkflowPage.css';
 function ProcessWorkflowPage({ processId }) {
   const [revision, setRevision] = useState(0);
   const forceUpdate = () => setRevision(r => r + 1);
+  const navigate = useNavigate();
 
   const nameInputRef = useRef(null);
   const [showNewStepSkeleton, setShowNewStepSkeleton] = useState(false);
@@ -24,7 +26,6 @@ function ProcessWorkflowPage({ processId }) {
   const userGroups = notionService.getUserGroups();
 
   const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [editingField, setEditingField] = useState(null);
 
   // Get forms for this process from localStorage
   const forms = notionService.getForms(processId);
@@ -68,13 +69,6 @@ function ProcessWorkflowPage({ processId }) {
     setShowSettingsModal(false);
   };
 
-  const handleInlineEdit = (stepId, field, value) => {
-    const newWorkflow = new WorkflowModel(workflow.toJSON());
-    newWorkflow.updateStep(stepId, { [field]: value });
-    notionService.updateProcessWorkflow(processId, newWorkflow.toJSON());
-    forceUpdate();
-    setEditingField(null);
-  };
 
   const getFormName = (formId) => {
     if (!formId) return 'No Form';
@@ -88,13 +82,31 @@ function ProcessWorkflowPage({ processId }) {
     return group ? group.name : 'Unknown Group';
   };
 
-  const startEditing = (stepId, field) => {
-    setEditingField(`${stepId}-${field}`);
+  const getAssigneeDisplay = (step) => {
+    // Check new assignedTo array first
+    if (step.assignedTo && step.assignedTo.length > 0) {
+      const names = step.assignedTo.map(assignee => {
+        if (assignee.type === 'group') {
+          const group = userGroups.find(g => g.id === assignee.id);
+          return group ? group.name : 'Unknown Group';
+        } else {
+          const users = notionService.getUsers();
+          const user = users.find(u => u.id === assignee.id);
+          return user ? user.name : 'Unknown User';
+        }
+      });
+      
+      if (names.length <= 2) {
+        return names.join(', ');
+      } else {
+        return `${names.slice(0, 2).join(', ')} +${names.length - 2} more`;
+      }
+    }
+    
+    // Fall back to legacy assignedToUserGroup
+    return getUserGroupName(step.assignedToUserGroup);
   };
 
-  const isEditing = (stepId, field) => {
-    return editingField === `${stepId}-${field}`;
-  };
 
   const orderedSteps = workflow.getOrderedSteps();
 
@@ -104,6 +116,14 @@ function ProcessWorkflowPage({ processId }) {
 
   const cancelAddNewStep = () => {
     setShowNewStepSkeleton(false);
+  };
+
+  const handleStepClick = (stepId, event) => {
+    // Don't navigate if clicking on action buttons
+    if (event.target.closest('.prop-actions')) {
+      return;
+    }
+    navigate(`/processes/${processId}/workflow/${stepId}`);
   };
 
   return (
@@ -125,7 +145,6 @@ function ProcessWorkflowPage({ processId }) {
         <div className="metadata-fields-grid">
           <div className="metadata-grid-header">
             <div className="header-name">Step Name</div>
-            <div className="header-type">Type</div>
             <div className="header-form">Form</div>
             <div className="header-assigned">Assigned To</div>
             <div className="header-actions">Actions</div>
@@ -134,70 +153,20 @@ function ProcessWorkflowPage({ processId }) {
           {orderedSteps.map((step, index) => (
             <div
               key={step.id}
-              className={`metadata-field-row`}
+              className={`metadata-field-row clickable-row`}
+              onClick={(e) => handleStepClick(step.id, e)}
             >
               <div className="prop-cell prop-name">
-                {isEditing(step.id, 'name') ? (
-                  <input
-                    type="text"
-                    value={step.name}
-                    onChange={(e) => handleInlineEdit(step.id, 'name', e.target.value)}
-                    onBlur={() => setEditingField(null)}
-                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === 'Escape') setEditingField(null); }}
-                    className="seamless-input"
-                    autoFocus
-                  />
-                ) : (
-                  <span className="editable-prop" onClick={() => startEditing(step.id, 'name')}>
-                    {step.name}
-                  </span>
-                )}
+                <span>{step.name}</span>
               </div>
 
-              <div className="prop-cell prop-type">
-                <span className="type-tag">{step.type}</span>
-              </div>
               
               <div className="prop-cell prop-form">
-                {isEditing(step.id, 'formId') ? (
-                  <select
-                    value={step.formId || ''}
-                    onChange={(e) => handleInlineEdit(step.id, 'formId', e.target.value)}
-                    onBlur={() => setEditingField(null)}
-                    className="seamless-input"
-                    autoFocus
-                  >
-                    <option value="">No Form</option>
-                    {forms.map(form => (
-                      <option key={form.id} value={form.id}>{form.name}</option>
-                    ))}
-                  </select>
-                ) : (
-                  <span className="editable-prop" onClick={() => startEditing(step.id, 'formId')}>
-                    {getFormName(step.formId)}
-                  </span>
-                )}
+                <span>{getFormName(step.formId)}</span>
               </div>
 
               <div className="prop-cell prop-assigned">
-                {isEditing(step.id, 'assignedToUserGroup') ? (
-                  <select
-                    value={step.assignedToUserGroup || ''}
-                    onChange={(e) => handleInlineEdit(step.id, 'assignedToUserGroup', e.target.value)}
-                    onBlur={() => setEditingField(null)}
-                    className="seamless-input"
-                    autoFocus
-                  >
-                    <option value="">Unassigned</option>
-                    {userGroups.map(group => (
-                      <option key={group.id} value={group.id}>{group.name}</option>
-                    ))}
-                  </select>
-                ) : (
-                  <span className="editable-prop" onClick={() => startEditing(step.id, 'assignedToUserGroup')}>
-                    {getUserGroupName(step.assignedToUserGroup)}
-                  </span>
-                )}
+                <span>{getAssigneeDisplay(step)}</span>
               </div>
 
               <div className="prop-cell prop-actions">
@@ -256,9 +225,6 @@ function ProcessWorkflowPage({ processId }) {
                   onBlur={cancelAddNewStep}
                   className="seamless-input"
                 />
-            </div>
-            <div className="prop-cell prop-type">
-              <span className="type-tag">form</span>
             </div>
             <div className="prop-cell prop-form">
               <span className="editable-prop placeholder-text">Select form...</span>

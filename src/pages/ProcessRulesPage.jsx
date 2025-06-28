@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Edit2, Plus } from 'lucide-react';
 import notionService from '../services/NotionService.js';
-import InlineAddRow from '../components/InlineAddRow.jsx';
+import RuleModal from '../components/RuleModal.jsx';
 import './ProcessRulesPage.css';
 import './ProcessMetadataPage.css';
 
@@ -18,32 +18,56 @@ function ProcessRulesPage({ processId }) {
   const metadataFields = [...enterpriseFields, ...(process.metadataFields || [])];
   const rules = notionService.getRules(processId);
 
-  const [addingRule, setAddingRule] = useState(false);
-  const [newRuleName, setNewRuleName] = useState('');
-  const [editingField, setEditingField] = useState(null); // rule id
-  const [editingProp, setEditingProp] = useState(null);
+  const [showRuleModal, setShowRuleModal] = useState(false);
+  const [editingRule, setEditingRule] = useState(null);
 
   const handleAddRule = () => {
-    if (!newRuleName.trim()) return;
-    const firstField = metadataFields[0]?.id || '';
-    notionService.addRule(processId, {
-      id: `rule${Date.now()}`,
-      name: newRuleName.trim(),
-      leftFieldId: firstField,
-      operator: '=',
-      rightFieldId: firstField,
-      rightValue: '',
-      rightMode: 'field'
-    });
-    setNewRuleName('');
-    setAddingRule(false);
+    setEditingRule(null);
+    setShowRuleModal(true);
+  };
+
+  const handleEditRule = (rule) => {
+    // Convert old rule format to new format if needed
+    const convertedRule = rule.conditions ? rule : {
+      conditions: [{
+        id: `cond_${Date.now()}`,
+        leftFieldId: rule.leftFieldId,
+        operator: rule.operator,
+        rightMode: rule.rightMode || 'field',
+        rightFieldId: rule.rightFieldId,
+        rightValue: rule.rightValue || ''
+      }],
+      logic: 'AND'
+    };
+    setEditingRule({ ...rule, ...convertedRule });
+    setShowRuleModal(true);
+  };
+
+  const handleSaveRule = (ruleData) => {
+    if (editingRule && editingRule.id) {
+      // Update existing rule
+      notionService.updateRule(processId, editingRule.id, {
+        ...editingRule,
+        ...ruleData,
+        name: editingRule.name
+      });
+    } else {
+      // Add new rule
+      notionService.addRule(processId, {
+        id: `rule${Date.now()}`,
+        name: 'New Rule',
+        ...ruleData
+      });
+    }
+    setShowRuleModal(false);
+    setEditingRule(null);
     forceUpdate();
   };
 
-  const updateRule = (ruleId, prop, value) => {
+  const updateRuleName = (ruleId, name) => {
     const rule = rules.find(r => r.id === ruleId);
     if (rule) {
-      notionService.updateRule(processId, ruleId, { ...rule, [prop]: value });
+      notionService.updateRule(processId, ruleId, { ...rule, name });
       forceUpdate();
     }
   };
@@ -53,172 +77,129 @@ function ProcessRulesPage({ processId }) {
     forceUpdate();
   };
 
-  const startEditing = (id, prop) => {
-    setEditingField(id);
-    setEditingProp(prop);
+  const getOperatorDisplay = (operator) => {
+    const operatorMap = {
+      '=': '=',
+      '!=': '≠',
+      '>': '>',
+      '<': '<',
+      '>=': '≥',
+      '<=': '≤',
+      'contains': 'contains',
+      'not_contains': 'does not contain',
+      'empty': 'is empty',
+      'not_empty': 'is not empty'
+    };
+    return operatorMap[operator] || operator;
   };
 
-  const stopEditing = () => {
-    setEditingField(null);
-    setEditingProp(null);
-  };
-
-  const getFieldName = (id) => {
-    return metadataFields.find(f => f.id === id)?.name || 'Unknown';
+  const getRuleDescription = (rule) => {
+    if (rule.conditions && rule.conditions.length > 0) {
+      // New format
+      const conditionTexts = rule.conditions.map(cond => {
+        const leftField = metadataFields.find(f => f.id === cond.leftFieldId)?.name || 'Unknown';
+        const operator = getOperatorDisplay(cond.operator);
+        let rightSide = '';
+        
+        if (cond.rightMode === 'field') {
+          rightSide = `[${metadataFields.find(f => f.id === cond.rightFieldId)?.name || 'Unknown'}]`;
+        } else if (['empty', 'not_empty'].includes(cond.operator)) {
+          rightSide = ''; // These operators don't need a right side
+        } else {
+          rightSide = `"${cond.rightValue || '(empty)'}"`;
+        }
+        
+        return rightSide ? `${leftField} ${operator} ${rightSide}` : `${leftField} ${operator}`;
+      });
+      
+      return conditionTexts.join(` ${rule.logic} `);
+    } else {
+      // Old format
+      const leftField = metadataFields.find(f => f.id === rule.leftFieldId)?.name || 'Unknown';
+      const operator = getOperatorDisplay(rule.operator);
+      let rightSide = '';
+      
+      if (rule.rightMode === 'value') {
+        rightSide = rule.rightValue || '(empty)';
+      } else {
+        rightSide = metadataFields.find(f => f.id === rule.rightFieldId)?.name || 'Unknown';
+      }
+      
+      return `${leftField} ${operator} ${rightSide}`;
+    }
   };
 
   return (
-    <div className="page-content">
-      <div className="page-header">
-        <h1>{process.name} - Rules</h1>
-        <p>{process.submenus.find(s => s.name === 'Rules')?.description}</p>
-      </div>
-      <div className="content-card full-width">
-        <div className="metadata-fields-grid">
-          <div className="metadata-grid-header">
-            <div className="header-name">Rule Name</div>
-            <div>Field A</div>
-            <div>Operator</div>
-            <div>Field B</div>
-            <div className="header-actions">Actions</div>
+    <>
+      <div className="page-content">
+        <div className="page-header">
+          <h1>{process.name} - Rules</h1>
+          <p>{process.submenus.find(s => s.name === 'Rules')?.description}</p>
+        </div>
+        <div className="content-card full-width">
+          <div className="card-header">
+            <h3>Rules</h3>
+            <button className="btn btn-primary" onClick={handleAddRule}>
+              <Plus size={16} />
+              Add Rule
+            </button>
           </div>
-          {rules.length === 0 ? (
-            <div className="empty-fields-placeholder">
-              <p>No rules created yet. Click below to get started.</p>
-            </div>
-          ) : (
-            rules.map(rule => (
-              <div key={rule.id} className="metadata-field-row">
-                <div className="prop-cell prop-name" style={{ gap: '8px', alignItems: 'center' }}>
-                  {editingField === rule.id && editingProp === 'name' ? (
+          <div className="rules-list">
+            {rules.length === 0 ? (
+              <div className="empty-rules-state">
+                <p>No rules created yet.</p>
+                <p>Click "Add Rule" to create your first rule.</p>
+              </div>
+            ) : (
+              rules.map(rule => (
+                <div key={rule.id} className="rule-item">
+                  <div className="rule-header">
                     <input
                       type="text"
-                      className="seamless-input"
+                      className="rule-name-input"
                       value={rule.name}
-                      onChange={e => updateRule(rule.id, 'name', e.target.value)}
-                      onBlur={stopEditing}
-                      onKeyDown={e => { if (e.key === 'Enter' || e.key === 'Escape') stopEditing(); }}
-                      autoFocus
+                      onChange={(e) => updateRuleName(rule.id, e.target.value)}
+                      placeholder="Rule name..."
                     />
-                  ) : (
-                    <span className="editable-prop" onClick={() => startEditing(rule.id,'name')}>{rule.name}</span>
-                  )}
-                  <label className="fx-switch">
-                    <input
-                      type="checkbox"
-                      checked={rule.rightMode === 'value'}
-                      onChange={e => updateRule(rule.id, 'rightMode', e.target.checked ? 'value' : 'field')}
-                    />
-                    <span className="fx-slider" />
-                  </label>
-                </div>
-                <div className="prop-cell">
-                  {editingField === rule.id && editingProp === 'leftFieldId' ? (
-                    <select
-                      className="seamless-input"
-                      value={rule.leftFieldId}
-                      onChange={e => updateRule(rule.id, 'leftFieldId', e.target.value)}
-                      onBlur={stopEditing}
-                      autoFocus
-                    >
-                      {metadataFields.map(f => (
-                        <option key={f.id} value={f.id}>{f.name}</option>
-                      ))}
-                    </select>
-                  ) : (
-                    <span className="editable-prop" onClick={() => startEditing(rule.id,'leftFieldId')}>{getFieldName(rule.leftFieldId)}</span>
-                  )}
-                </div>
-                <div className="prop-cell">
-                  {editingField === rule.id && editingProp === 'operator' ? (
-                    <select
-                      className="seamless-input"
-                      value={rule.operator}
-                      onChange={e => updateRule(rule.id, 'operator', e.target.value)}
-                      onBlur={stopEditing}
-                      autoFocus
-                    >
-                      <option value="=">=</option>
-                      <option value=">">&gt;</option>
-                      <option value="<">&lt;</option>
-                      <option value="!=">≠</option>
-                    </select>
-                  ) : (
-                    <span className="editable-prop" onClick={() => startEditing(rule.id,'operator')}>{rule.operator}</span>
-                  )}
-                </div>
-                <div className="prop-cell">
-                  {editingField === rule.id && editingProp === 'rightFieldId' ? (
-                    rule.rightMode === 'field' ? (
-                      <select
-                        className="seamless-input"
-                        value={rule.rightFieldId}
-                        onChange={e => updateRule(rule.id, 'rightFieldId', e.target.value)}
-                        onBlur={stopEditing}
-                        autoFocus
+                    <div className="rule-actions">
+                      <button 
+                        className="btn btn-icon" 
+                        onClick={() => handleEditRule(rule)}
+                        title="Edit rule"
                       >
-                        {metadataFields.map(f => (
-                          <option key={f.id} value={f.id}>{f.name}</option>
-                        ))}
-                      </select>
-                    ) : (
-                      <input
-                        type="text"
-                        className="seamless-input"
-                        value={rule.rightValue}
-                        onChange={e => updateRule(rule.id, 'rightValue', e.target.value)}
-                        onBlur={stopEditing}
-                        autoFocus
-                        placeholder="Enter value"
-                      />
-                    )
-                  ) : (
-                    <span className="editable-prop" onClick={() => startEditing(rule.id,'rightFieldId')}>
-                      {rule.rightMode === 'field'
-                        ? getFieldName(rule.rightFieldId)
-                        : (rule.rightValue || <span className="placeholder-text">Click to add...</span>)}
-                    </span>
-                  )}
+                        <Edit2 size={16} />
+                      </button>
+                      <button 
+                        className="btn btn-icon btn-danger" 
+                        onClick={() => deleteRule(rule.id)}
+                        title="Delete rule"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="rule-description">
+                    {getRuleDescription(rule)}
+                  </div>
                 </div>
-                <div className="prop-cell prop-actions">
-                  <button className="action-button delete" onClick={() => deleteRule(rule.id)} title="Delete rule">
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              </div>
-            ))
-          )}
-          <InlineAddRow
-            active={addingRule}
-            onActivate={() => setAddingRule(true)}
-            label={<span className="editable-prop" style={{ color: '#666' }}>Add a rule</span>}
-            className="metadata-field-row"
-            cellClassName="prop-cell"
-          >
-            <div className="prop-cell prop-name" style={{ gap: '8px', alignItems: 'center' }}>
-              <input
-                type="text"
-                value={newRuleName}
-                onChange={e => setNewRuleName(e.target.value)}
-                placeholder="Rule name"
-                className="seamless-input"
-                autoFocus
-                onKeyDown={e => { if (e.key === 'Enter' && newRuleName.trim()) handleAddRule(); }}
-                onBlur={() => { if (newRuleName.trim()) { handleAddRule(); } else { setAddingRule(false); setNewRuleName(''); } }}
-              />
-              <label className="fx-switch" title="Toggle field/value">
-                <input type="checkbox" disabled />
-                <span className="fx-slider" />
-              </label>
-            </div>
-            <div className="prop-cell"><span className="editable-prop placeholder-text">Select field...</span></div>
-            <div className="prop-cell"><span className="editable-prop placeholder-text">=</span></div>
-            <div className="prop-cell"><span className="editable-prop placeholder-text">Select field...</span></div>
-            <div className="prop-cell prop-actions"></div>
-          </InlineAddRow>
+              ))
+            )}
+          </div>
         </div>
       </div>
-    </div>
+
+      {showRuleModal && (
+        <RuleModal
+          processId={processId}
+          rule={editingRule}
+          onSave={handleSaveRule}
+          onClose={() => {
+            setShowRuleModal(false);
+            setEditingRule(null);
+          }}
+        />
+      )}
+    </>
   );
 }
 

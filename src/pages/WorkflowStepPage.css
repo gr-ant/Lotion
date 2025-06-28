@@ -1,0 +1,156 @@
+.header-with-back {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: var(--card-bg);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.back-button:hover {
+  background: var(--gray-100);
+  transform: translateX(-2px);
+}
+
+.breadcrumb {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+.content-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 1200px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.step-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-row label {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.detail-row span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-primary);
+}
+
+.editable-value {
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  flex: 1;
+}
+
+.editable-value:hover {
+  background-color: var(--gray-50);
+}
+
+.seamless-input {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background: transparent;
+  border: 2px solid var(--primary);
+  border-radius: 4px;
+  padding: 0.5rem;
+  width: 100%;
+  outline: none;
+}
+
+.seamless-input:focus {
+  background: white;
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+}
+
+textarea.seamless-input {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.assignee-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.legacy-assignment {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--warning-light);
+  border: 1px solid var(--warning);
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+.legacy-label {
+  color: var(--warning-dark);
+  font-weight: 500;
+}
+
+.legacy-value {
+  color: var(--text-primary);
+}
+
+.inline-icon {
+  color: var(--text-secondary);
+}
+
+.type-tag {
+  display: inline-flex;
+  padding: 0.25rem 0.75rem;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.step-config {
+  padding: 2rem;
+  text-align: center;
+}
+
+.placeholder-text {
+  color: var(--text-secondary);
+  font-style: italic;
+}

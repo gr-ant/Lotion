@@ -45,3 +45,183 @@
   color: #787774;
   font-size: 14px;
 }
+
+.config-link {
+  display: block;
+  margin-bottom: 16px;
+  text-align: right;
+}
+
+.config-button {
+  background: #f7f6f3;
+  border: 1px solid #e3e2e0;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 1rem;
+  color: #37352f;
+  cursor: pointer;
+  transition: background 0.2s, border 0.2s;
+}
+
+.config-button:hover {
+  background: #ecebe7;
+  border-color: #cfcfcf;
+}
+
+.config-icon {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  background: #fff;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  z-index: 1100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.config-drawer {
+  position: fixed;
+  top: 0;
+  left: -350px;
+  width: 350px;
+  height: 100vh;
+  background: #fff;
+  box-shadow: 2px 0 12px rgba(0,0,0,0.12);
+  z-index: 1200;
+  transition: left 0.3s cubic-bezier(.4,0,.2,1);
+  display: flex;
+  flex-direction: column;
+}
+.config-drawer.open {
+  left: 0;
+}
+.config-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+}
+.close-drawer {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.config-drawer-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.assigned-instances-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.assigned-instance-item {
+  margin-bottom: 12px;
+}
+.assigned-instance-item button {
+  width: 100%;
+  padding: 12px 16px;
+  background: #f7f6f3;
+  border: 1px solid #e3e2e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.assigned-instance-item button:hover {
+  background: #ecebe7;
+}
+
+.admin-panel-nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+.admin-panel-nav button {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px 4px 0 0;
+  color: #37352f;
+  transition: background 0.15s;
+}
+.admin-panel-nav button.active {
+  background: #ecebe7;
+  font-weight: bold;
+  border-bottom: 2px solid #b3b3b3;
+}
+.admin-panel-content {
+  padding: 8px 0 0 0;
+}
+
+.admin-sidebar-slideout {
+  display: flex;
+  height: 100%;
+}
+.admin-sidebar-menu {
+  width: 220px;
+  background: #faf9f6;
+  border-right: 1px solid #e3e2e0;
+  padding: 24px 0 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.admin-sidebar-header {
+  font-size: 12px;
+  font-weight: 600;
+  color: #787774;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 16px 0 4px 24px;
+}
+.admin-sidebar-link {
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 6px 24px;
+  font-size: 15px;
+  color: #37352f;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.admin-sidebar-link.active, .admin-sidebar-link:hover {
+  background: #e3e2e0;
+  font-weight: bold;
+}
+.admin-sidebar-link.add {
+  font-style: italic;
+  color: #888;
+  padding-left: 0;
+}
+.admin-sidebar-add-process {
+  display: flex;
+  align-items: center;
+  margin-left: 24px;
+  margin-bottom: 8px;
+}
+.admin-sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  background: #fff;
+  padding: 0 24px;
+}
+.config-drawer-content {
+  padding: 0;
+}

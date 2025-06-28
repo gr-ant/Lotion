@@ -124,28 +124,32 @@ function ProcessDatasetsPage({ processId }) {
                       }}
                       autoFocus
                       className="seamless-input"
+                      disabled={dataset.id === 'enterprise_status'}
                     />
                   ) : (
                     <span
                       className="editable-prop"
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => {
+                      style={{ cursor: dataset.id === 'enterprise_status' ? 'not-allowed' : 'pointer', color: dataset.id === 'enterprise_status' ? '#9b9a97' : undefined }}
+                      onClick={dataset.id === 'enterprise_status' ? undefined : () => {
                         setEditingDatasetId(dataset.id);
                         setEditingDatasetName(dataset.name);
                       }}
                     >
                       {dataset.name}
+                      {dataset.id === 'enterprise_status' && <span style={{ fontSize: 12, marginLeft: 8, color: '#2e75cc' }}>(Permanent)</span>}
                     </span>
                   )}
                 </div>
                 <div className="prop-cell prop-actions">
-                  <button
-                    className="action-button delete"
-                    onClick={() => handleDeleteDataset(dataset.id)}
-                    title="Delete dataset"
-                  >
-                    <Trash2 size={14} />
-                  </button>
+                  {dataset.id !== 'enterprise_status' && (
+                    <button
+                      className="action-button delete"
+                      onClick={() => handleDeleteDataset(dataset.id)}
+                      title="Delete dataset"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  )}
                   <button
                     className="action-button"
                     onClick={() => setExpandedDatasetId(expandedDatasetId === dataset.id ? null : dataset.id)}
@@ -161,9 +165,9 @@ function ProcessDatasetsPage({ processId }) {
                   <div className="prop-cell" colSpan={3} style={{ width: '100%', padding: 0 }}>
                     <div style={{ paddingLeft: '30px', width: '100%' }}>
                       {(dataset.items || []).map(item => (
-                        <div key={item.id} className="metadata-field-row" style={{ background: 'transparent', display: 'grid', gridTemplateColumns: '1fr 80px', alignItems: 'center', marginBottom: 0 }}>
-                          <div className="prop-cell prop-name">
-                            <span>{item.value}</span>
+                        <div key={item.id} className="metadata-field-row" style={{ background: 'transparent', display: 'grid', gridTemplateColumns: 'minmax(500px,3fr) 80px', alignItems: 'center', marginBottom: 0, width: '100%' }}>
+                          <div className="prop-cell prop-name" style={{ width: '100%' }}>
+                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'block' }}>{item.value}</span>
                           </div>
                           <div className="prop-cell prop-actions">
                             <button
@@ -178,7 +182,7 @@ function ProcessDatasetsPage({ processId }) {
                       ))}
                       {/* Inline add row for items */}
                       {addingItemId === dataset.id ? (
-                        <div className="metadata-field-row" style={{ background: 'transparent', display: 'grid', gridTemplateColumns: '1fr 80px', alignItems: 'center', marginBottom: 0 }}>
+                        <div className="metadata-field-row" style={{ background: 'transparent', display: 'grid', gridTemplateColumns: 'minmax(300px,3fr) 80px', alignItems: 'center', marginBottom: 0 }}>
                           <div className="prop-cell prop-name">
                             <input
                               type="text"

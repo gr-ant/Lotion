@@ -17,10 +17,14 @@ class WorkflowModel {
     const newStep = {
       id: `step${Date.now()}`,
       order: this.steps.length + 1,
-      type: 'form',
       required: true,
-      assignedToUserGroup: null,
+      assignedTo: [], // Array of {type: 'user'|'group', id: string}
+      assignedToUserGroup: null, // Keep for backward compatibility
       status: 'pending',
+      mappings: {
+        routing: [],
+        data: []
+      },
       ...step
     };
     this.steps.push(newStep);
@@ -63,7 +67,6 @@ class WorkflowModel {
     const step = this.steps.find(s => s.id === stepId);
     if (step) {
       step.formId = formId;
-      step.type = 'form';
     }
     return step;
   }
@@ -72,7 +75,6 @@ class WorkflowModel {
     const step = this.steps.find(s => s.id === stepId);
     if (step) {
       delete step.formId;
-      step.type = 'manual';
     }
     return step;
   }
@@ -91,6 +93,10 @@ class WorkflowModel {
 
   getStepByForm(formId) {
     return this.steps.find(s => s.formId === formId);
+  }
+
+  getStepById(stepId) {
+    return this.steps.find(s => s.id === stepId);
   }
 
   getOrderedSteps() {
@@ -118,8 +124,8 @@ class WorkflowModel {
       errors.push('At least one step is required');
     }
     
-    const formSteps = this.steps.filter(s => s.type === 'form');
-    const formIds = formSteps.map(s => s.formId).filter(Boolean);
+    const formSteps = this.steps.filter(s => s.formId);
+    const formIds = formSteps.map(s => s.formId);
     
     if (formIds.length !== new Set(formIds).size) {
       errors.push('Duplicate form assignments found');

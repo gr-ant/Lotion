@@ -50,7 +50,7 @@
   display: grid;
   /* allow certain columns to size to their content while the placeholder
      column takes up remaining space */
-  grid-template-columns: 2fr auto auto auto 1fr 50px;
+  grid-template-columns: 2fr 2fr auto auto 1fr 50px;
   gap: 16px;
   align-items: center;
   padding: 8px 16px;

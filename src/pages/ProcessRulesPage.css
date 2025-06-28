@@ -1,91 +1,136 @@
-.metadata-fields-grid {
+/* ProcessRulesPage.css */
+
+.rules-list {
+  padding: 1rem;
+}
+
+.empty-rules-state {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+}
+
+.empty-rules-state p {
+  margin: 0.5rem 0;
+}
+
+.rule-item {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.rule-header {
   display: flex;
-  flex-direction: column;
-}
-
-.metadata-grid-header,
-.metadata-field-row {
-  display: grid;
-  grid-template-columns: 2fr 2fr 1fr 2fr 50px;
-  gap: 16px;
+  justify-content: space-between;
   align-items: center;
-  padding: 8px 16px;
+  margin-bottom: 0.75rem;
 }
 
-.metadata-grid-header {
-  font-size: 12px;
+.rule-name-input {
+  flex: 1;
+  font-size: 1rem;
   font-weight: 500;
-  color: #787774;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-bottom: 1px solid #e3e2e0;
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s;
 }
 
-.metadata-field-row {
-  border-bottom: 1px solid #f7f6f3;
+.rule-name-input:hover {
+  background: white;
+  border-color: var(--gray-200);
 }
 
-.metadata-field-row:last-child {
-  border-bottom: none;
+.rule-name-input:focus {
+  background: white;
+  border-color: var(--primary);
+  outline: none;
 }
 
-.prop-cell {
+.rule-actions {
   display: flex;
-  align-items: stretch;
+  gap: 0.5rem;
 }
 
-.prop-actions {
-  justify-content: center;
-}
-
-/* Small field/value toggle */
-.fx-switch {
-  position: relative;
-  display: inline-block;
-  width: 28px;
-  height: 16px;
-}
-
-.fx-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.fx-slider {
-  position: absolute;
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #d3d2d0;
-  border-radius: 16px;
-  transition: background-color 0.2s;
-}
-
-.fx-slider:before {
-  content: 'F';
-  position: absolute;
+  transition: all 0.2s;
+  border: none;
   display: flex;
   align-items: center;
-  justify-content: center;
-  height: 12px;
-  width: 12px;
-  left: 2px;
-  bottom: 2px;
-  background-color: #fff;
-  border-radius: 50%;
-  font-size: 10px;
-  color: #37352f;
-  transition: transform 0.2s, content 0.2s;
+  gap: 0.5rem;
+  text-decoration: none;
+  line-height: 1.4;
+  min-height: 36px;
+  box-sizing: border-box;
 }
 
-.fx-switch input:checked + .fx-slider {
-  background-color: #2e75cc;
+.btn-primary {
+  background: var(--primary, #007bff) !important;
+  color: white !important;
+  border: 1px solid var(--primary, #007bff) !important;
+  position: relative;
+  z-index: 1;
 }
 
-.fx-switch input:checked + .fx-slider:before {
-  transform: translateX(12px);
-  content: 'V';
+.btn-primary:hover {
+  background: var(--primary-dark, #0056b3) !important;
+  border-color: var(--primary-dark, #0056b3) !important;
+}
+
+.btn-icon {
+  padding: 0.5rem;
+  background: white;
+  border: 1px solid var(--gray-200);
+  color: var(--text-secondary);
+}
+
+.btn-icon:hover {
+  background: var(--gray-50);
+  border-color: var(--gray-300);
+  color: var(--text-primary);
+}
+
+.btn-danger:hover {
+  background: var(--danger-light);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.rule-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  padding: 0.5rem;
+  background: white;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--gray-200, #e5e7eb);
+  background: white;
+  min-height: 60px;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  flex: 1;
+}
+
+.card-header .btn {
+  flex-shrink: 0;
+  margin-left: 1rem;
 }

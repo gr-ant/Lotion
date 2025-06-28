@@ -119,7 +119,7 @@ function FormBuilderPage() {
   }, [contextMenu]);
 
   const addFieldToForm = (field, fullWidth = false, position = null) => {
-    const newField = { metadataFieldId: field.id, fullWidth };
+    const newField = { metadataFieldId: field.id, fullWidth, readOnly: false };
 
     let newLayout;
     if (position !== null) {
@@ -138,6 +138,15 @@ function FormBuilderPage() {
     newLayout[fieldIndex] = {
       ...newLayout[fieldIndex],
       fullWidth: !newLayout[fieldIndex].fullWidth,
+    };
+    setForm({ ...form, layout: newLayout });
+  };
+
+  const toggleFieldReadOnly = (fieldIndex) => {
+    const newLayout = [...form.layout];
+    newLayout[fieldIndex] = {
+      ...newLayout[fieldIndex],
+      readOnly: !newLayout[fieldIndex].readOnly,
     };
     setForm({ ...form, layout: newLayout });
   };
@@ -247,9 +256,17 @@ function FormBuilderPage() {
                                 <span className="field-type">{field.type}</span>
                                 {field.required && <span className="field-required">Required</span>}
                                 {item.fullWidth && <span className="field-full-width">Full Width</span>}
+                                {item.readOnly && <span className="field-readonly">Read Only</span>}
                               </div>
                             </div>
                             <div className="field-actions">
+                              <button
+                                className={`action-button${item.readOnly ? ' active' : ''}`}
+                                onClick={() => toggleFieldReadOnly(index)}
+                                title={item.readOnly ? 'Set editable' : 'Set read only'}
+                              >
+                                {item.readOnly ? <span role="img" aria-label="Read Only">🔒</span> : <span role="img" aria-label="Editable">🔓</span>}
+                              </button>
                               <button
                                 className="action-button"
                                 onClick={() => toggleFieldWidth(index)}
@@ -281,7 +298,7 @@ function FormBuilderPage() {
 
         {showPreview && form.layout.length > 0 && (
           <Modal title={form.name} onClose={() => setShowPreview(false)}>
-            <FormRenderer form={form} metadataFields={metadataFields} isPreview={false} />
+            <FormRenderer form={form} metadataFields={metadataFields} isPreview={false} processId={processId} />
           </Modal>
         )}
 

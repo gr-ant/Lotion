@@ -5,6 +5,7 @@ import ProcessFormsListPage from './ProcessFormsListPage.jsx';
 import ProcessWorkflowPage from './ProcessWorkflowPage.jsx';
 import ProcessDatasetsPage from './ProcessDatasetsPage.jsx';
 import ProcessRulesPage from './ProcessRulesPage.jsx';
+import ProcessHomePage from './ProcessHomePage.jsx';
 
 function ProcessDynamicPage() {
   const { processId, submenu } = useParams();
@@ -14,6 +15,9 @@ function ProcessDynamicPage() {
     return <div className="page-content">Process not found</div>;
   }
 
+  if (!submenu) {
+    return <ProcessHomePage />;
+  }
   if (submenu === 'metadata') {
     return <ProcessMetadataPage processId={processId} />;
   }

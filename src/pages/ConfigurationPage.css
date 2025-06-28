@@ -1,0 +1,38 @@
+.config-button {
+  background: #f7f6f3;
+  border: 1px solid #e3e2e0;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 1rem;
+  color: #37352f;
+  cursor: pointer;
+  transition: background 0.2s, border 0.2s;
+  margin-right: 12px;
+}
+.config-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.config-button:hover:not(:disabled) {
+  background: #ecebe7;
+  border-color: #cfcfcf;
+}
+.config-upload-label {
+  display: inline-block;
+  cursor: pointer;
+}
+.config-upload-btn {
+  display: inline-block;
+  background: #f7f6f3;
+  border: 1px solid #e3e2e0;
+  border-radius: 6px;
+  padding: 7px 18px;
+  font-size: 1rem;
+  color: #37352f;
+  cursor: pointer;
+  transition: background 0.2s, border 0.2s;
+}
+.config-upload-btn:hover {
+  background: #ecebe7;
+  border-color: #cfcfcf;
+} 

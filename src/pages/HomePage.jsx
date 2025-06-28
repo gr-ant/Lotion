@@ -1,41 +1,36 @@
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import notionService from '../services/NotionService.js';
 import './HomePage.css';
 
-function HomePage() {
-  const processes = notionService.getProcesses();
+export default function HomePage() {
+  const [assignedInstances, setAssignedInstances] = useState([]);
+
+  useEffect(() => {
+    const allProcesses = notionService.getProcesses();
+    let allInstances = [];
+    allProcesses.forEach(proc => {
+      const instances = notionService.getProcessInstances(proc.id) || [];
+      allInstances = allInstances.concat(instances.map(inst => ({ ...inst, process: proc })));
+    });
+    setAssignedInstances(allInstances);
+  }, []);
 
   return (
     <div className="page-content">
-      <div className="page-header">
-        <h1>Home</h1>
-        <p>Overview of your processes.</p>
-      </div>
-      <div className="content-card full-width">
-        <div className="card-header">
-          <h3>Processes</h3>
-        </div>
-        {processes.length === 0 ? (
-          <div className="empty-processes-placeholder">
-            <p>No processes have been created yet.</p>
-          </div>
-        ) : (
-          <div className="process-cards">
-            {processes.map(process => (
-              <Link
-                key={process.id}
-                to={`/processes/${process.id}/metadata`}
-                className="process-card"
-              >
-                <h4>{process.name}</h4>
-                <p>{process.description || 'No description provided.'}</p>
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
+      <h2>Process Tasks</h2>
+      {assignedInstances.length === 0 ? (
+        <p>No process tasks available.</p>
+      ) : (
+        <ul className="assigned-instances-list">
+          {assignedInstances.map(inst => (
+            <li key={inst.id} className="assigned-instance-item">
+              <div>
+                {inst.process?.name || 'Process'} — Instance {inst.id}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
-
-export default HomePage;

@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
-import { Plus, Menu, ChevronRight, ChevronDown } from 'lucide-react';
+import { Plus, Menu, ChevronRight, ChevronDown, Trash2 } from 'lucide-react';
 import { config } from '../config.js';
 import notionService from '../services/NotionService.js';
 import './Sidebar.css';
@@ -42,6 +42,17 @@ function Sidebar() {
     setAddingProcess(false);
   };
 
+  const handleDeleteProcess = (processId, event) => {
+    event.stopPropagation();
+    if (confirm('Are you sure you want to delete this process? This action cannot be undone.')) {
+      notionService.deleteProcess(processId);
+      setProcesses(notionService.getProcesses());
+      if (expandedProcess === processId) {
+        setExpandedProcess(null);
+      }
+    }
+  };
+
   return (
     <div className="sidebar">
       <div className="sidebar-header">
@@ -59,6 +70,12 @@ function Sidebar() {
               className={`nav-item${location.pathname === '/' ? ' active' : ''}`}
             >
               <span>Home</span>
+            </Link>
+            <Link
+              to="/config"
+              className={`nav-item${location.pathname.startsWith('/config') ? ' active' : ''}`}
+            >
+              <span>Configuration</span>
             </Link>
           </nav>
         </div>
@@ -92,7 +109,7 @@ function Sidebar() {
 
               return (
                 <div key={process.id} className="process-item">
-                  <button
+                  <div
                     className={`nav-item process-header ${isActive ? 'active' : ''}`}
                     onClick={() => toggleProcess(process.id)}
                   >
@@ -100,7 +117,14 @@ function Sidebar() {
                       {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
                     </div>
                     <span>{process.name}</span>
-                  </button>
+                    <button
+                      className="delete-button"
+                      onClick={(e) => handleDeleteProcess(process.id, e)}
+                      title="Delete process"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
 
                   {isExpanded && (
                     <div className="process-submenu">
