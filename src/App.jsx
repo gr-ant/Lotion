@@ -11,8 +11,10 @@ import './styles/Global.css';
 import './styles/AppLayout.css';
 
 function App() {
+  const basename = import.meta.env.MODE === 'production' ? '/Lotion' : '';
+  
   return (
-    <Router>
+    <Router basename={basename}>
       <div className="app">
         <Sidebar />
         <main className="main-content">
